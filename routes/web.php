@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminAuth\AdminController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Visitor\VisitorController;
 use App\Http\Requests\StoreAdminRequest;
 use Illuminate\Support\Facades\Route;
@@ -50,9 +51,7 @@ Route::middleware('auth', \App\Http\Middleware\TrackVisitors::class)->group(func
     Route::resource('products', ProductController::class);
 
     /*** Customers Routes ***/
-    Route::get('/customers', function () {
-        return Inertia::render('Admin/Customers');
-    });
+    Route::resource('customers', UserController::class);
     /*** Categories Routes ***/
     Route::resource('categories', CategoryController::class);
 

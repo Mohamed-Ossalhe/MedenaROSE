@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Inertia\Inertia;
 
@@ -16,11 +17,30 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category', 'images')
-            ->orderBy('created_at', 'desc')
+        $sort_options = ['price_asc', 'price_desc', 'name_asc', 'name_desc'];
+        $products = Product::query()
+            ->when($request->input('search'), function ($query, $search){
+                $query->where('name', 'like', "%{$search}%");
+            })->when($request->input('sort') && in_array($request->input('sort'), $sort_options), function ($query, $sort) use ($sort_options) {
+                switch ($sort) {
+                    case 'price_asc':
+                        $query->orderBy('price', 'asc');
+                        break;
+                    case 'price_desc':
+                        $query->orderBy('price', 'desc');
+                        break;
+                    case 'name_asc':
+                        $query->orderBy('name', 'asc');
+                        break;
+                    case 'name_desc':
+                        $query->orderBy('name', 'desc');
+                        break;
+                }
+            })
             ->paginate(10)
+            ->withQueryString()
             ->through(fn($product) => [
                 'id' => $product->id,
                 'name' => $product->name,
@@ -31,8 +51,23 @@ class ProductController extends Controller
                     'src' => $image->src
                 ])
             ]);
+//        $products = Product::with('category', 'images')
+//            ->orderBy('created_at', 'desc')
+//            ->paginate(10)
+//            ->through(fn($product) => [
+//                'id' => $product->id,
+//                'name' => $product->name,
+//                'price' => $product->price,
+//                'quantity' => $product->quantity,
+//                'images' => $product->images->map(fn($image) => [
+//                    'id' => $image->id,
+//                    'src' => $image->src
+//                ])
+//            ]);
         return Inertia::render('Admin/Products', [
-            'products' => $products
+            'products' => $products,
+            "filters" => $request->only(['search']),
+            "sort" => $request->only(['sort'])
         ]);
     }
 

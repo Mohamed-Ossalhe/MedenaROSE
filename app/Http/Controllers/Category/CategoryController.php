@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Models\CategoryImage;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoryController extends Controller
@@ -14,10 +15,24 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::with('products', 'images')
+        $sort_options = ['name_asc', 'name_desc'];
+        $categories = Category::query()
+            ->when($request->input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })->when($request->input('sort') && in_array($request->input('sort'), $sort_options), function ($query, $sort) use ($sort_options) {
+                switch ($sort) {
+                    case 'name_asc':
+                        $query->orderBy('name', 'asc');
+                        break;
+                    case 'name_desc':
+                        $query->orderBy('name', 'desc');
+                        break;
+                }
+            })
             ->paginate(10)
+            ->withQueryString()
             ->through(fn($category) => [
                 'id' => $category->id,
                 'name' => $category->name,
@@ -28,7 +43,9 @@ class CategoryController extends Controller
                 ])
             ]);
         return Inertia::render('Admin/Categories', [
-            'categories' => $categories
+            'categories' => $categories,
+            "filters" => $request->only(['search']),
+            "sort" => $request->only(['sort'])
         ]);
     }
 
