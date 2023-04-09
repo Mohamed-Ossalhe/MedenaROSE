@@ -1,103 +1,105 @@
 <template>
     <h1 class="text-lg my-5">Customers</h1>
-    <div class="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul role="list" class="divide-y divide-gray-200">
-            <li v-for="application in applications" :key="application.applicant.email">
-                <a :href="application.href" class="block hover:bg-gray-50">
-                    <div class="flex items-center px-4 py-4 sm:px-6">
-                        <div class="min-w-0 flex-1 flex items-center">
-                            <div class="flex-shrink-0">
-                                <img class="h-12 w-12 rounded-full" :src="application.applicant.imageUrl" alt="" />
-                            </div>
-                            <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
-                                <div>
-                                    <p class="text-sm font-medium text-indigo-600 truncate">{{ application.applicant.name }}</p>
-                                    <p class="mt-2 flex items-center text-sm text-gray-500">
-                                        <MailIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                        <span class="truncate">{{ application.applicant.email }}</span>
-                                    </p>
+    <div class="h-96">
+        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+            <ul role="list" class="divide-y divide-gray-200">
+                <li v-for="user in users.data" :key="user.id">
+                    <a href="" class="block hover:bg-gray-50">
+                        <div class="flex items-center px-4 py-4 sm:px-6">
+                            <div class="min-w-0 flex-1 flex items-center">
+                                <div class="flex-shrink-0">
+                                    <img class="h-12 w-12 rounded-full" src="" alt="add image" />
                                 </div>
-                                <div class="hidden md:block">
+                                <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                     <div>
-                                        <p class="text-sm text-gray-900">
-                                            Applied on
-                                            {{ ' ' }}
-                                            <time :datetime="application.date">{{ application.dateFull }}</time>
-                                        </p>
+                                        <p class="text-sm font-medium text-indigo-600 truncate">{{ user.name }}</p>
                                         <p class="mt-2 flex items-center text-sm text-gray-500">
-                                            <CheckCircleIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400" aria-hidden="true" />
-                                            {{ application.stage }}
+                                            <MailIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            <span class="truncate">{{ user.email }}</span>
                                         </p>
+                                    </div>
+                                    <div class="hidden md:block">
+                                        <div>
+                                            <p class="text-sm text-gray-900">
+                                                Joined on
+                                                {{ ' ' }}
+                                                <time :datetime="user.joined">{{ toDate(user.joined) }}</time>
+                                            </p>
+                                            <p class="mt-2 flex items-center text-sm text-gray-500">
+                                                <CheckCircleIcon class="flex-shrink-0 mr-1.5 h-5 w-5 text-green-400" aria-hidden="true" />
+                                                {{ user.role }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div>
+                                <ChevronRightIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                            </div>
                         </div>
-                        <div>
-                            <ChevronRightIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-                        </div>
-                    </div>
-                </a>
-            </li>
-        </ul>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        <Pagination :links="users.links" />
     </div>
 </template>
 
 <script>
 import { CheckCircleIcon, ChevronRightIcon, MailIcon } from '@heroicons/vue/solid'
 import Layout from "@/Pages/Admin/Shared/Layout.vue";
-
-const applications = [
-    {
-        applicant: {
-            name: 'Ricardo Cooper',
-            email: 'ricardo.cooper@example.com',
-            imageUrl:
-                'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-        date: '2020-01-07',
-        dateFull: 'January 7, 2020',
-        stage: 'Completed phone screening',
-        href: '#',
-    },
-    {
-        applicant: {
-            name: 'Kristen Ramos',
-            email: 'kristen.ramos@example.com',
-            imageUrl:
-                'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-        date: '2020-01-07',
-        dateFull: 'January 7, 2020',
-        stage: 'Completed phone screening',
-        href: '#',
-    },
-    {
-        applicant: {
-            name: 'Ted Fox',
-            email: 'ted.fox@example.com',
-            imageUrl:
-                'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        },
-        date: '2020-01-07',
-        dateFull: 'January 7, 2020',
-        stage: 'Completed phone screening',
-        href: '#',
-    },
-]
+import Pagination from "@/Components/Pagination.vue";
 
 export default {
     name: 'Customers',
     layout: Layout,
+    data() {
+        return {
+            months: {
+                '1': 'January',
+                '2': 'February',
+                '3': 'March',
+                '4': 'April',
+                '5': 'May',
+                '6': 'June',
+                '7': 'July',
+                '8': 'August',
+                '9': 'September',
+                '10': 'October',
+                '11': 'November',
+                '12': 'December'
+            }
+        }
+    },
     components: {
+        Pagination,
         CheckCircleIcon,
         ChevronRightIcon,
         MailIcon,
     },
-    setup() {
-        return {
-            applications,
-        }
+    props: {
+        users: Object
     },
+    methods: {
+        addZeroToDate(value) {
+            if(value < 10) {
+                return '0' + value
+            }
+            return value
+        },
+        // TODO: Separate the search and sort code to a separate file component and recall it in other files
+        setMonth(value) {
+            return this.months[value]
+        },
+
+        toDate(value) {
+            const date = new Date(value)
+            const joinedDate = `${this.setMonth(date.getMonth())} ${this.addZeroToDate(date.getDate())}, ${date.getFullYear()}`
+            return joinedDate
+        }
+    }
 }
 </script>
 

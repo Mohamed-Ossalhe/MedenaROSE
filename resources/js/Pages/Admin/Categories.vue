@@ -7,6 +7,9 @@
             <Link href="/categories/create" class="inline-flex items-center justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 sm:w-auto">Add New Category</Link>
         </div>
     </div>
+
+    <Filters :link="'/categories'" :sort="sort" :filters="filters" />
+
     <div v-if="categories.data.length > 0">
         <div class="h-96">
             <ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
@@ -34,20 +37,61 @@
 import Layout from "@/Pages/Admin/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
 import noFileFound from '../../../assets/Dashboard/no-file-found.jpg';
+import {
+    Dialog,
+    DialogOverlay,
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+    Popover,
+    PopoverButton,
+    PopoverGroup,
+    PopoverPanel,
+    TransitionChild,
+    TransitionRoot,
+} from '@headlessui/vue'
+import { XIcon } from '@heroicons/vue/outline'
+import { ChevronDownIcon } from '@heroicons/vue/solid'
+import Filters from "@/Components/Filters.vue";
 
 export default {
     name: "Categories",
     layout: Layout,
     data() {
         return {
-            noFileFound: noFileFound
+            // TODO: Fix the search bar and sort default value after refresh
+            noFileFound: noFileFound,
         }
     },
     props: {
-        categories: Object
+        categories: Object,
+        filters: Object,
+        sort: Object
     },
     components: {
-        Pagination
+        Pagination,
+        Dialog,
+        DialogOverlay,
+        Disclosure,
+        DisclosureButton,
+        DisclosurePanel,
+        Menu,
+        MenuButton,
+        MenuItem,
+        MenuItems,
+        Popover,
+        PopoverButton,
+        PopoverGroup,
+        PopoverPanel,
+        TransitionChild,
+        TransitionRoot,
+        ChevronDownIcon,
+        XIcon,
+        Filters
     },
     computed: {
         image() {
