@@ -36,7 +36,7 @@ export default {
     name: "Filters",
     data() {
         return {
-            search: ref(this.filters.search),
+            search: ref(''),
             sort: ref('')
         }
     },

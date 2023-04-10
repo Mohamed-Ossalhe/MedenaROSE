@@ -22,14 +22,19 @@ class CategoryController extends Controller
             ->when($request->input('search'), function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%");
             })->when($request->input('sort') && in_array($request->input('sort'), $sort_options), function ($query, $sort) use ($sort_options) {
-                switch ($sort) {
-                    case 'name_asc':
-                        $query->orderBy('name', 'asc');
-                        break;
-                    case 'name_desc':
-                        $query->orderBy('name', 'desc');
-                        break;
+                if($sort === 'name_asc') {
+                    $query->orderBy('name', 'asc');
+                }else if($sort === 'name_desc'){
+                    $query->orderBy('name', 'desc');
                 }
+//                switch ($sort) {
+//                    case 'name_asc':
+//                        $query->orderBy('name', 'asc');
+//                        break;
+//                    case 'name_desc':
+//                        $query->orderBy('name', 'desc');
+//                        break;
+//                }
             })
             ->paginate(10)
             ->withQueryString()
