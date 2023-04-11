@@ -1,4 +1,5 @@
 <template>
+    <Head title="Dashboard"/>
     <div class="grid grid-cols-5 gap-3">
         <div class="bg-white overflow-hidden shadow sm:rounded-lg col-span-3">
             <div class="px-4 py-5 sm:p-6">

@@ -21,12 +21,12 @@ import {Dialog, DialogOverlay, TransitionChild, TransitionRoot} from "@headlessu
 import DashboardLink from "@/Pages/Admin/Shared/DashboardLink.vue";
 
 const navigation = [
-    { name: 'Admin/Dashboard', title:'Dashboard', href: '/dashboard', icon: HomeIcon, current: false },
-    { name: 'Admin/Analytics', title:'Analytics', href: '/analytics', icon: ChartPieIcon, current: false },
-    { name: 'Admin/Products', title:'Products', href: '/products', icon: ShoppingCartIcon, current: false },
-    { name: 'Admin/Customers', title:'Customers', href: '/customers', icon: UsersIcon, current: false },
-    { name: 'Admin/Categories', title:'Categories', href: '/categories', icon: ViewGridIcon, current: false },
-    { name: 'Admin/Orders', title:'Orders', href: '/orders', icon: ShoppingBagIcon, current: false },
+    { name: 'Admin/Dashboard', title:'Dashboard', href: '/admin/dashboard', icon: HomeIcon, current: false },
+    { name: 'Admin/Analytics', title:'Analytics', href: '/admin/analytics', icon: ChartPieIcon, current: false },
+    { name: 'Admin/Products', title:'Products', href: '/admin/products', icon: ShoppingCartIcon, current: false },
+    { name: 'Admin/Customers', title:'Customers', href: '/admin/customers', icon: UsersIcon, current: false },
+    { name: 'Admin/Categories', title:'Categories', href: '/admin/categories', icon: ViewGridIcon, current: false },
+    { name: 'Admin/Orders', title:'Orders', href: '/admin/orders', icon: ShoppingBagIcon, current: false },
 ]
 export default {
     name: "DashboardNav",

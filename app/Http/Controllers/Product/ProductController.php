@@ -51,19 +51,6 @@ class ProductController extends Controller
                     'src' => $image->src
                 ])
             ]);
-//        $products = Product::with('category', 'images')
-//            ->orderBy('created_at', 'desc')
-//            ->paginate(10)
-//            ->through(fn($product) => [
-//                'id' => $product->id,
-//                'name' => $product->name,
-//                'price' => $product->price,
-//                'quantity' => $product->quantity,
-//                'images' => $product->images->map(fn($image) => [
-//                    'id' => $image->id,
-//                    'src' => $image->src
-//                ])
-//            ]);
         return Inertia::render('Admin/Products', [
             'products' => $products,
             "filters" => $request->only(['search']),

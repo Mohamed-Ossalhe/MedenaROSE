@@ -36,7 +36,7 @@ export default {
     name: "Filters",
     data() {
         return {
-            search: ref(''),
+            search: ref(this.filters.search),
             sort: ref('')
         }
     },
@@ -52,13 +52,13 @@ export default {
     },
     watch: {
         search: debounce(function (value) {
-            this.$inertia.get(this.link, {search: value}, {
+            this.$inertia.get( '/admin' + this.link, {search: value}, {
                 preserveState: true,
                 replace: false
             })
         }, 300),
         sort: debounce(function (value) {
-            this.$inertia.get(this.link, {sort: value}, {
+            this.$inertia.get('/admin' + this.link, {sort: value}, {
                 preserveState: true,
                 replace: false
             })

@@ -5,16 +5,21 @@ namespace App\Http\Controllers\Visitor;
 use App\Http\Controllers\Controller;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class VisitorController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        $visitors = Visitor::all();
-        return $visitors;
+        return Inertia::render('Admin/Analytics', [
+            'visitors' => [
+                'total' => count(Visitor::all())
+            ]
+        ]);
     }
 
     /**
