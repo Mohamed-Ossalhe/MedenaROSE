@@ -1,4 +1,5 @@
 <template>
+    <Head title="Home"/>
     <div class="bg-white">
         <!-- Header -->
         <Header />

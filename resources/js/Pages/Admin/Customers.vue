@@ -1,4 +1,5 @@
 <template>
+    <Head title="Customers"/>
     <div class="mt-5">
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
@@ -17,7 +18,7 @@
                                 <div class="flex items-center px-4 py-4 sm:px-6">
                                     <div class="min-w-0 flex-1 flex items-center">
                                         <div class="flex-shrink-0">
-                                            <img class="h-12 w-12 rounded-full" src="" alt="add image" />
+                                            <img class="h-12 w-12 rounded-full" :src="image + user.image" alt="add image" />
                                         </div>
                                         <div class="min-w-0 flex-1 px-4 md:grid md:grid-cols-2 md:gap-4">
                                             <div>
@@ -55,10 +56,7 @@
                 <Pagination :links="users.links" />
             </div>
         </div>
-        <div v-else class="flex flex-col items-center justify-center">
-            <img class="h-80" :src="notFoundImage" alt="">
-            <p class="text-xl text-primary">No Users Found</p>
-        </div>
+        <NotFound v-else>No Users Found</NotFound>
     </div>
 </template>
 
@@ -67,7 +65,7 @@ import { CheckCircleIcon, ChevronRightIcon, MailIcon } from '@heroicons/vue/soli
 import Layout from "@/Pages/Admin/Shared/Layout.vue";
 import Pagination from "@/Components/Pagination.vue";
 import Filters from "@/Components/Filters.vue";
-import notFoundImage from "../../../assets/Dashboard/no-file-found.jpg";
+import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
 
 export default {
     name: 'Customers',
@@ -91,6 +89,7 @@ export default {
         }
     },
     components: {
+        NotFound,
         Filters,
         Pagination,
         CheckCircleIcon,
@@ -116,13 +115,13 @@ export default {
 
         toDate(value) {
             const date = new Date(value)
-            const joinedDate = `${this.setMonth(date.getMonth())} ${this.addZeroToDate(date.getDate())}, ${date.getFullYear()}`
+            const joinedDate = `${this.setMonth(date.getMonth())} ${this.addZeroToDate(date.getDate())}, ${date.getFullYear()} | ${date.getUTCHours() < 10 ? '0' + date.getUTCHours() : date.getUTCHours()}:${date.getUTCMinutes() < 10 ? '0' + date.getUTCMinutes() : date.getUTCMinutes()}`
             return joinedDate
         }
     },
-    setup() {
-        return {
-            notFoundImage
+    computed: {
+        image: function () {
+            return 'http://127.0.0.1:8000/storage/usersImages/';
         }
     }
 }

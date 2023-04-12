@@ -1,11 +1,12 @@
 <template>
+    <Head title="Products"/>
     <div class="mt-5">
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
                 <h1 class="text-xl font-semibold text-gray-900">Products</h1>
             </div>
             <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                <Link href="/products/create" class="inline-flex items-center justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 sm:w-auto">Add New Product</Link>
+                <Link href="/admin/products/create" class="inline-flex items-center justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 sm:w-auto">Add New Product</Link>
             </div>
         </div>
 
@@ -65,10 +66,7 @@
             </div>
             <Pagination :links="products.links"/>
         </div>
-        <div v-else class="flex flex-col items-center justify-center">
-            <img class="h-80 mt-10" :src="noFileFound" alt="">
-            <h2 class="capitalize text-lg text-red-900">no product found, add new product</h2>
-        </div>
+        <NotFound v-else :toLink="'/admin/products/create'" :buttonText="'Add New Product'">no product found, add new product</NotFound>
     </div>
 </template>
 
@@ -96,6 +94,7 @@ import {
 import { XIcon } from '@heroicons/vue/outline'
 import { ChevronDownIcon } from '@heroicons/vue/solid'
 import Filters from "@/Components/Filters.vue";
+import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
 
 export default {
     name: 'Products',
@@ -106,6 +105,7 @@ export default {
         }
     },
     components: {
+        NotFound,
         Filters,
         Pagination,
         Dialog,

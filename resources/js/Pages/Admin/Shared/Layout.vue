@@ -64,7 +64,7 @@
                         <div class="flex items-end justify-between">
                             <div class="flex items-center">
                                 <div>
-                                    <img class="inline-block h-9 w-9 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                                    <img class="inline-block h-9 w-9 rounded-full" :src="imagePath + image" alt="" />
                                 </div>
                                 <div class="ml-3">
                                     <p class="text-sm font-medium text-gray-700 capitalize group-hover:text-gray-900">{{ name }}</p>
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
                             <div>
-                                <Link href="/admin-logout" as="button" method="post">
+                                <Link href="/admin/admin-logout" as="button" method="post">
                                     <LogoutIcon class="h-6 w-6 text-black"/>
                                 </Link>
                             </div>
@@ -143,6 +143,12 @@ export default {
     computed: {
         name() {
             return this.$page.props.auth.user.name
+        },
+        image() {
+            return this.$page.props.auth.user.image
+        },
+        imagePath() {
+            return 'http://127.0.0.1:8000/storage/usersImages/'
         }
     }
 }

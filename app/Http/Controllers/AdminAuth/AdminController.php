@@ -17,16 +17,9 @@ class AdminController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(StoreAdminRequest $request)
+    public function index(): Response
     {
-        $data = [
-            'name' => 'mohamed ossalhe',
-            'email' => $request->email,
-            'password' => $request->password,
-            'role' => 'admin'
-        ];
-        User::create($data);
-        return response('created');
+        return Inertia::render('Admin/Dashboard');
     }
 
     /**
@@ -43,7 +36,7 @@ class AdminController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
+            return redirect()->intended('admin/dashboard');
         }
 
         return back()->withErrors([
@@ -51,9 +44,14 @@ class AdminController extends Controller
         ])->onlyInput('email');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    public function login(): Response|RedirectResponse
+    {
+        if(Auth::user()) {
+            return redirect()->intended('admin/dashboard');
+        }
+        return Inertia::render('Admin/Login');
+    }
+
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
@@ -62,13 +60,13 @@ class AdminController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('admin-login');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAdminRequest $request, Admin $admin)
+    public function update(UpdateAdminRequest $request)
     {
         //
     }
@@ -76,7 +74,7 @@ class AdminController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Admin $admin)
+    public function destroy()
     {
         //
     }
