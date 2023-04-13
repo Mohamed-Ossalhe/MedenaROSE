@@ -20,20 +20,24 @@ class UserController extends Controller
      */
     public function authenticate(Request $request): RedirectResponse
     {
-        $credentials = [
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ];
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $credentials['role'] = 'client';
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('home');
+            return redirect()->intended('products');
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
+
 
     /**
      * Display a listing of the resource.
@@ -77,9 +81,23 @@ class UserController extends Controller
     }
 
     /**
+     * Logout the user
+     */
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request): \Illuminate\Http\Response
+    public function store(StoreUserRequest $request): RedirectResponse
     {
         $userData = [
             'name' => $request->name,
@@ -98,7 +116,7 @@ class UserController extends Controller
         $imageName = explode('/', $imageFile);
         $userData['image'] = $imageName[2];
         User::create($userData);
-        return response('created');
+        return redirect()->intended('signin');
     }
 
     /**

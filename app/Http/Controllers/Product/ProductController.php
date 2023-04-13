@@ -86,6 +86,9 @@ class ProductController extends Controller
             'category_id' => $request->category_id
         ];
         $product = Product::create($productData);
+        $totalProductInCategory = Product::where('category_id', $product->category_id)->get()->count();
+        $category = Category::find($product->category_id);
+        $category->update(['quantity' => $totalProductInCategory]);
         foreach ($productData['image'] as $image) {
             $imageFile = $image->store('public/ProductImages');
             $imageName = explode('/', $imageFile);
@@ -126,6 +129,6 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
     }
 }

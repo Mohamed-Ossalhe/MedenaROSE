@@ -118,7 +118,7 @@ export default {
     },
     methods: {
         submit() {
-            this.formData.post('/signin')
+            this.formData.post('signin')
         }
     }
 }

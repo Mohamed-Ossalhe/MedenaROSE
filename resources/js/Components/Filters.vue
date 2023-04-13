@@ -1,6 +1,6 @@
 <template>
     <div class="my-5">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-3">
             <div class="col-span-full">
                 <label for="category" class="block text-sm font-medium text-gray-700">Sort</label>
                 <select id="category" v-on:change="onSelectChange" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
@@ -9,6 +9,7 @@
             </div>
             <div>
                 <div>
+                    <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
                     <div class="mt-1 relative flex items-center">
                         <input v-model="search" type="text" name="search" id="search" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md" placeholder="Search Products..." />
                         <div class="absolute inset-y-0 right-0 flex py-1.5 pr-1.5">
@@ -52,13 +53,14 @@ export default {
     },
     watch: {
         search: debounce(function (value) {
-            this.$inertia.get( '/admin' + this.link, {search: value}, {
+            this.$inertia.get(this.link, {search: value}, {
                 preserveState: true,
+                preserveScroll: true,
                 replace: false
             })
         }, 300),
         sort: debounce(function (value) {
-            this.$inertia.get('/admin' + this.link, {sort: value}, {
+            this.$inertia.get(this.link, {sort: value}, {
                 preserveState: true,
                 replace: false
             })

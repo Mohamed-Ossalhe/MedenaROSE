@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Http\Middleware\IsAdminMiddleware;
 
 class AdminController extends Controller
 {
@@ -33,7 +34,9 @@ class AdminController extends Controller
             'password' => $request->password
         ];
 
-        if (Auth::attempt($credentials)) {
+        $credentials['role'] = 'admin';
+
+        if (Auth::attempt($credentials) && Auth::user()->role === "admin") {
             $request->session()->regenerate();
 
             return redirect()->intended('admin/dashboard');
@@ -46,7 +49,7 @@ class AdminController extends Controller
 
     public function login(): Response|RedirectResponse
     {
-        if(Auth::user()) {
+        if(Auth::user() && Auth::user()->role === "admin") {
             return redirect()->intended('admin/dashboard');
         }
         return Inertia::render('Admin/Login');
