@@ -176,7 +176,6 @@ import SelectMenu from "@/Shared/SelectMenu.vue";
 import MedenaRoseLogo from "../../../assets/pink-logo.svg";
 import {useForm} from "@inertiajs/vue3";
 import {cities, regions} from "morocco-cities";
-import {ref, watch} from "vue";
 
 export default {
     name: "Signup",
@@ -199,7 +198,8 @@ export default {
                 street_address: ''
             }),
             previewImage: '',
-            cities: []
+            cities: [],
+            toast: useToast()
         }
     },
     methods: {

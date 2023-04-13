@@ -9,6 +9,9 @@ module.exports = {
         extend: {
             colors: {
                 'primary': '#86003C'
+            },
+            backgroundImage: {
+                "products-hero": "url('../assets/Products-Hero/el-kelaa-mgouna2.webp')"
             }
         },
     },

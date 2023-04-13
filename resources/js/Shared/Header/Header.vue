@@ -1,6 +1,6 @@
 <template>
     <!-- Mobile menu -->
-    <TransitionRoot as="template" :show="open">
+    <TransitionRoot as="template" :show="open" class="z-50">
         <Dialog as="div" class="fixed inset-0 flex z-40 lg:hidden" @close="open = false">
             <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
                 <DialogOverlay class="fixed inset-0 bg-black bg-opacity-25" />
@@ -71,6 +71,29 @@
                         </div>
                     </div>
 
+                    <!-- Profile dropdown -->
+                    <Menu as="div" class="relative ml-3 z-50">
+                        <div>
+                            <MenuButton class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" />
+                            </MenuButton>
+                        </div>
+                        <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                            <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <MenuItem>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
+                                </MenuItem>
+                                <MenuItem>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700">Settings</a>
+                                </MenuItem>
+                                <MenuItem>
+                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700">Sign out</a>
+                                </MenuItem>
+                            </MenuItems>
+                        </transition>
+                    </Menu>
+
                     <div class="border-t border-gray-200 py-6 px-4">
                         <a href="#" class="-m-2 p-2 flex items-center">
                             <img src="https://tailwindui.com/img/flags/flag-canada.svg" alt="" class="w-5 h-auto block flex-shrink-0" />
@@ -83,9 +106,9 @@
         </Dialog>
     </TransitionRoot>
 
-    <header class="relative overflow-hidden">
+    <header class="relative z-50">
         <!-- Top navigation -->
-        <nav aria-label="Top" class="relative z-20 bg-white bg-opacity-90 backdrop-filter backdrop-blur-xl">
+        <nav aria-label="Top" class="relative bg-white bg-opacity-90 backdrop-filter backdrop-blur-xl">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="h-16 flex items-center">
                     <button type="button" class="bg-white p-2 rounded-md text-gray-400 lg:hidden" @click="open = true">
@@ -161,11 +184,34 @@
                     </PopoverGroup>
 
                     <div class="ml-auto flex items-center">
-                        <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                        <div :class="user ? 'hidden lg:hidden lg:flex-1 lg:items-center lg:justify-end lg:space-x-6' : 'hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6'">
                             <Link href="/signin" class="text-sm font-medium text-gray-700 hover:text-gray-800">Sign in</Link>
                             <span class="h-6 w-px bg-gray-200" aria-hidden="true" />
                             <Link href="/signup" class="text-sm font-medium text-gray-700 hover:text-gray-800">Create account</Link>
                         </div>
+
+                        <!-- Profile dropdown -->
+                        <Menu as="div" :class="user ? 'block relative ml-3 z-50': 'hidden relative ml-3 z-50'">
+                            <div>
+                                <MenuButton class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                                    <span class="sr-only">Open user menu</span>
+                                    <img class="h-8 w-8 rounded-full" :src="imagePath + image" alt="" />
+                                </MenuButton>
+                            </div>
+                            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                                <MenuItems class="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <MenuItem>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700">Your Profile</a>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700">Settings</a>
+                                    </MenuItem>
+                                    <MenuItem>
+                                        <Link as="button" method="post" href="/logout" class="block px-4 py-2 text-sm text-gray-700">Sign out</Link>
+                                    </MenuItem>
+                                </MenuItems>
+                            </transition>
+                        </Menu>
 
                         <!-- Cart -->
                         <div class="ml-4 flow-root lg:ml-6">
@@ -185,7 +231,7 @@
 import { ref } from 'vue'
 import {
     Dialog,
-    DialogOverlay,
+    DialogOverlay, Menu, MenuButton, MenuItem, MenuItems,
     Popover,
     PopoverButton,
     PopoverGroup,
@@ -352,6 +398,10 @@ const favorites = [
 ]
 export default {
     components: {
+        Menu,
+        MenuButton,
+        MenuItems,
+        MenuItem,
         Dialog,
         DialogOverlay,
         Popover,
@@ -369,6 +419,17 @@ export default {
         SearchIcon,
         ShoppingBagIcon,
         XIcon,
+    },
+    computed: {
+        user(){
+            return this.$page.props.auth?.user
+        },
+        image() {
+            return this.$page.props.auth?.user.image
+        },
+        imagePath() {
+            return 'http://127.0.0.1:8000/storage/usersImages/'
+        }
     },
     setup() {
         const open = ref(false)

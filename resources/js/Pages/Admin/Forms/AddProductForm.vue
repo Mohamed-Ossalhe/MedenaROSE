@@ -27,8 +27,9 @@
                     <div class="col-span-full">
                         <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
                         <select id="category" v-on:change="onSelectChange" name="category" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            <option v-for="category in categories" v-text="category.name" :value="category.id"></option>
+                            <option v-for="category in categories" v-text="category.name" :value="category.id" selected="selected"></option>
                         </select>
+                        <p v-if="formData.errors.category_id" v-text="formData.errors.category_id" class="text-sm text-red-500"></p>
                     </div>
 
                     <div class="col-span-full">
@@ -37,7 +38,13 @@
                             <div class="col-span-full">
                                 <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                                     <div class="text-center">
-                                        <PhotographIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                                        <div v-if="formData.image" class="flex items-center gap-1">
+                                            <div v-for="image in previewImages" class="relative">
+                                                <XCircleIcon class="absolute -top-5 right-0 mx-auto h-5 w-5 text-red-600 cursor-pointer" @click="()=>removeImage(image)" />
+                                                <img class="h-24 w-full" :src="image" alt="">
+                                            </div>
+                                        </div>
+                                        <PhotographIcon v-else class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
                                         <div class="mt-4 flex text-sm leading-6 text-gray-600">
                                             <label for="file-upload" class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                                                 <span>Upload a files</span>
@@ -84,6 +91,7 @@
 import {PhotographIcon} from "@heroicons/vue/solid";
 import Layout from "@/Pages/Admin/Shared/Layout.vue";
 import {useForm} from "@inertiajs/vue3";
+import {XCircleIcon} from "@heroicons/vue/outline";
 
 export default {
     name: "AddProductForm",
@@ -97,24 +105,43 @@ export default {
                 price: '',
                 quantity: '',
                 category_id: ''
-            })
+            }),
+            previewImages: []
         }
     },
     props: {
         categories: Array
     },
     components: {
-        PhotographIcon
+        PhotographIcon,
+        XCircleIcon
     },
     methods: {
         onImageSelect(e) {
             this.formData.image = e.target.files
+            for (let image of this.formData.image) {
+                this.previewImages.push(URL.createObjectURL(image))
+            }
         },
         onSelectChange(e) {
             this.formData.category_id = e.target.value
         },
         submit() {
-            this.formData.post('/products')
+            this.formData.post('/admin/products')
+        },
+        removeImage(image) {
+            //this.formData.image = Array.from(this.formData.image).filter((e) => e !== URL.revokeObjectURL(image))
+            let imageUrl = this.previewImages.find((previewImage) => previewImage === image);
+            this.previewImages = this.previewImages.filter((e) => e !== image)
+            this.formData.image = Array.from(this.formData.image).filter((file) => {
+                const fileUrl = URL.createObjectURL(file);
+                const shouldRemove = fileUrl === imageUrl;
+                if (shouldRemove) {
+                    URL.revokeObjectURL(fileUrl);
+                }
+                return !shouldRemove;
+            });
+            console.log(this.formData.image)
         }
     }
 }

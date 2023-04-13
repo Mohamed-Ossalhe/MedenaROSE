@@ -1,8 +1,6 @@
 <template>
     <Head title="Home"/>
     <div class="bg-white">
-        <!-- Header -->
-        <Header />
         <!-- Hero Section -->
         <Hero/>
         <main>
@@ -36,7 +34,6 @@
                                 <div>
                                     <h3 class="font-semibold text-white">
                                         <a href="#">
-                                            <span class="absolute inset-0" />
                                             Accessories
                                         </a>
                                     </h3>
@@ -51,7 +48,6 @@
                                 <div>
                                     <h3 class="font-semibold text-white">
                                         <a href="#">
-                                            <span class="absolute inset-0" />
                                             Workspace
                                         </a>
                                     </h3>
@@ -165,9 +161,6 @@
                 </div>
             </section>
         </main>
-
-        <!-- Footer -->
-        <Footer/>
     </div>
 </template>
 
@@ -192,6 +185,7 @@ import { MenuIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/vue/out
 import Header from "@/Shared/Header/Header.vue";
 import Hero from "@/Shared/Home/Hero.vue";
 import Footer from "@/Shared/Footer/Footer.vue";
+import DefaultLayout from "@/Pages/Client/Shared/DefaultLayout.vue";
 
 const favorites = [
     {
@@ -220,36 +214,9 @@ const favorites = [
             "Model wearing women's burgundy red crewneck artwork tee with small white triangle overlapping larger black triangle.",
     },
 ]
-const footerNavigation = {
-    shop: [
-        { name: 'Bags', href: '#' },
-        { name: 'Tees', href: '#' },
-        { name: 'Objects', href: '#' },
-        { name: 'Home Goods', href: '#' },
-        { name: 'Accessories', href: '#' },
-    ],
-    company: [
-        { name: 'Who we are', href: '#' },
-        { name: 'Sustainability', href: '#' },
-        { name: 'Press', href: '#' },
-        { name: 'Careers', href: '#' },
-        { name: 'Terms & Conditions', href: '#' },
-        { name: 'Privacy', href: '#' },
-    ],
-    account: [
-        { name: 'Manage Account', href: '#' },
-        { name: 'Returns & Exchanges', href: '#' },
-        { name: 'Redeem a Gift Card', href: '#' },
-    ],
-    connect: [
-        { name: 'Contact Us', href: '#' },
-        { name: 'Twitter', href: '#' },
-        { name: 'Instagram', href: '#' },
-        { name: 'Pinterest', href: '#' },
-    ],
-}
 
 export default {
+    layout: DefaultLayout,
     components: {
     Dialog,
     DialogOverlay,
@@ -268,17 +235,13 @@ export default {
     SearchIcon,
     ShoppingBagIcon,
     XIcon,
-    Header,
-    Hero,
-    Footer
+    Hero
 },
     setup() {
         const open = ref(false)
 
         return {
-            navigation,
             favorites,
-            footerNavigation,
             open,
         }
     },

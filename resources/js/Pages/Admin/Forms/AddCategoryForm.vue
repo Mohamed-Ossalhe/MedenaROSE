@@ -30,7 +30,8 @@
                             <div class="col-span-full">
                                 <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                                     <div class="text-center">
-                                        <PhotographIcon class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                                        <img v-if="formData.image" class="h-24 w-full" :src="previewImage" alt="">
+                                        <PhotographIcon v-else class="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
                                         <div class="mt-4 flex items-center text-sm leading-6 text-gray-600">
                                             <label for="file-upload" class="relative text-center cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                                                 <span>Upload a file</span>
@@ -69,7 +70,8 @@ export default {
                 name: '',
                 description: '',
                 image: null
-            })
+            }),
+            previewImage: ''
         }
     },
     components: {
@@ -78,9 +80,10 @@ export default {
     methods: {
         onImageSelected(e) {
             this.formData.image = e.target.files[0]
+            this.previewImage = URL.createObjectURL(e.target.files[0])
         },
         submit() {
-            this.formData.post('/categories')
+            this.formData.post('/admin/categories')
         }
     }
 }

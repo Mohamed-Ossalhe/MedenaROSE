@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <Filters :link="'/products'" :sort="sort" :filters="filters" />
+        <Filters :link="'/admin/products'" :sort="sort" :filters="filters" />
 
         <div v-if="products.data.length > 0">
             <div class="h-96">
@@ -27,15 +27,16 @@
                                         <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                                         <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                             <span class="sr-only">Edit</span>
+                                            <span class="sr-only">Delete</span>
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-200 bg-white">
-                                    <tr v-for="product in products.data" :key="product.email">
+                                    <tr v-for="product in products.data" :key="product.id">
                                         <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                             <div class="flex items-center">
                                                 <div class="h-10 w-10 flex-shrink-0">
-                                                    <img v-for="pic in product.images" class="h-10 w-10 rounded-full" :src="image + pic.src" alt="" />
+                                                    <img class="h-10 w-10 rounded-full" :src="image + product.images[0].src" alt="" />
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="font-medium text-gray-900">{{ product.name }}</div>
@@ -54,6 +55,9 @@
                                         <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                             <a href="#" class="text-indigo-600 hover:text-indigo-900"
                                             >Edit<span class="sr-only">, {{ product.name }}</span></a
+                                            >
+                                            <Link preserve-scroll as="button" method="DELETE" :href="'/admin/products/'+ product.id" class="text-red-600 hover:text-red-900 ml-2"
+                                            >Delete<span class="sr-only">, {{ product.name }}</span></Link
                                             >
                                         </td>
                                     </tr>
