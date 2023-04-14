@@ -98,6 +98,7 @@ class ProductController extends Controller
             ];
             $productImage = ProductImage::create($productImageData);
         }
+        return redirect('admin/products');
     }
 
     /**

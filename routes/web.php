@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminAuth\AdminController;
 use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Visitor\VisitorController;
@@ -77,6 +78,11 @@ Route::get('/our-products', function (Request $request) {
     ]);
 });
 
+/*** Cart Route ***/
+Route::get('/cart', function () {
+    return Inertia::render('Client/Cart');
+});
+
 /*** User Auth Routes ***/
 Route::get('/signup', [UserController::class, 'create']);
 Route::post('/signup', [UserController::class, 'store']);
@@ -108,9 +114,7 @@ Route::middleware('auth', TrackVisitors::class)->group(function () {
         Route::resource('categories', CategoryController::class);
 
         /*** Orders Routes ***/
-        Route::get('/orders', function () {
-            return Inertia::render('Admin/Orders');
-        });
+        Route::resource('orders', OrderController::class);
         /*** Admin LogOut Route ***/
         Route::post('/admin-logout', [AdminController::class, 'logout']);
     });
