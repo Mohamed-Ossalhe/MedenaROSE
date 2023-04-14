@@ -198,8 +198,7 @@ export default {
                 street_address: ''
             }),
             previewImage: '',
-            cities: [],
-            toast: useToast()
+            cities: []
         }
     },
     methods: {

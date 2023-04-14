@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <Filters :link="'/categories'" :sort="sort" :filters="filters" />
+    <Filters :link="'/admin/categories'" :sort="sort" :filters="filters" />
 
     <div v-if="categories.data.length > 0">
         <div class="h-96">
