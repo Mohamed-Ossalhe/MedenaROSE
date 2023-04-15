@@ -1,63 +1,34 @@
 <template>
     <Head title="Home"/>
-    <div class="bg-white">
+    <section class="bg-white">
         <!-- Hero Section -->
         <Hero/>
         <main>
             <!-- Category section -->
             <section aria-labelledby="category-heading" class="bg-gray-50">
-                <div class="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-                    <div class="sm:flex sm:items-baseline sm:justify-between">
-                        <h2 id="category-heading" class="text-2xl font-extrabold tracking-tight text-gray-900">Shop by Category</h2>
+                <div class="py-16 sm:py-24 xl:max-w-7xl xl:mx-auto xl:px-8">
+                    <div class="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0">
+                        <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Shop by Category</h2>
                         <a href="#" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">Browse all categories<span aria-hidden="true"> &rarr;</span></a>
                     </div>
 
-                    <div class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:grid-rows-2 sm:gap-x-6 lg:gap-8">
-                        <div class="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:aspect-h-1 sm:aspect-w-1 sm:row-span-2">
-                            <img src="https://tailwindui.com/img/ecommerce-images/home-page-03-featured-category.jpg" alt="Two models wearing women's black cotton crewneck tee and off-white cotton crewneck tee." class="object-center object-cover group-hover:opacity-75" />
-                            <div aria-hidden="true" class="bg-gradient-to-b from-transparent to-black opacity-50" />
-                            <div class="p-6 flex items-end">
-                                <div>
-                                    <h3 class="font-semibold text-white">
-                                        <a href="#">
-                                            New Arrivals
-                                        </a>
-                                    </h3>
-                                    <p aria-hidden="true" class="mt-1 text-sm text-white">Shop now</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
-                            <img src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-01.jpg" alt="Wooden shelf with gray and olive drab green baseball caps, next to wooden clothes hanger with sweaters." class="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full" />
-                            <div aria-hidden="true" class="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0" />
-                            <div class="p-6 flex items-end sm:absolute sm:inset-0">
-                                <div>
-                                    <h3 class="font-semibold text-white">
-                                        <a href="#">
-                                            Accessories
-                                        </a>
-                                    </h3>
-                                    <p aria-hidden="true" class="mt-1 text-sm text-white">Shop now</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="group aspect-w-2 aspect-h-1 rounded-lg overflow-hidden sm:relative sm:aspect-none sm:h-full">
-                            <img src="https://tailwindui.com/img/ecommerce-images/home-page-03-category-02.jpg" alt="Walnut desk organizer set with white modular trays, next to porcelain mug on wooden desk." class="object-center object-cover group-hover:opacity-75 sm:absolute sm:inset-0 sm:w-full sm:h-full" />
-                            <div aria-hidden="true" class="bg-gradient-to-b from-transparent to-black opacity-50 sm:absolute sm:inset-0" />
-                            <div class="p-6 flex items-end sm:absolute sm:inset-0">
-                                <div>
-                                    <h3 class="font-semibold text-white">
-                                        <a href="#">
-                                            Workspace
-                                        </a>
-                                    </h3>
-                                    <p aria-hidden="true" class="mt-1 text-sm text-white">Shop now</p>
+                    <div class="mt-4 flow-root">
+                        <div class="-my-2">
+                            <div class="box-content py-2 relative h-80 overflow-x-auto xl:overflow-visible">
+                                <div class="absolute min-w-screen-xl px-4 flex space-x-8 sm:px-6 lg:px-8 xl:relative xl:px-0 xl:space-x-0 xl:grid xl:grid-cols-5 xl:gap-x-8">
+                                    <a v-for="category in categories" :key="category.name" :href="category.name" class="relative w-56 h-80 rounded-lg p-6 flex flex-col overflow-hidden hover:opacity-75 xl:w-auto">
+                                        <span aria-hidden="true" class="absolute inset-0">
+                                          <img :src="categoryImagePath + category.image[0].src" alt="" class="w-full h-full object-center object-cover" />
+                                        </span>
+                                        <span aria-hidden="true" class="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50" />
+                                        <span class="relative mt-auto text-center text-xl font-bold text-white">{{ category.name }}</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-6 sm:hidden">
+                    <div class="mt-6 px-4 sm:hidden">
                         <a href="#" class="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">Browse all categories<span aria-hidden="true"> &rarr;</span></a>
                     </div>
                 </div>
@@ -67,7 +38,7 @@
             <section aria-labelledby="cause-heading">
                 <div class="relative bg-gray-800 py-32 px-6 sm:py-40 sm:px-12 lg:px-16">
                     <div class="absolute inset-0 overflow-hidden">
-                        <img src="https://tailwindui.com/img/ecommerce-images/home-page-03-feature-section-full-width.jpg" alt="" class="w-full h-full object-center object-cover" />
+                        <img :src="rosesImage" alt="" class="w-full h-full object-center object-cover" />
                     </div>
                     <div aria-hidden="true" class="absolute inset-0 bg-gray-900 bg-opacity-50" />
                     <div class="relative max-w-3xl mx-auto flex flex-col items-center text-center">
@@ -87,17 +58,17 @@
                     </div>
 
                     <div class="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-y-0 sm:gap-x-6 lg:gap-x-8">
-                        <div v-for="favorite in favorites" :key="favorite.id" class="group relative">
+                        <div v-for="product in products" :key="product.name" class="group relative">
                             <div class="w-full h-96 rounded-lg overflow-hidden group-hover:opacity-75 sm:h-auto sm:aspect-w-2 sm:aspect-h-3">
-                                <img :src="favorite.imageSrc" :alt="favorite.imageAlt" class="w-full h-full object-center object-cover" />
+                                <img :src="productImagePath + product.image[0].src" class="w-full h-full object-center object-cover" />
                             </div>
                             <h3 class="mt-4 text-base font-semibold text-gray-900">
-                                <a :href="favorite.href">
+                                <a :href="product.name">
                                     <span class="absolute inset-0" />
-                                    {{ favorite.name }}
+                                    {{ product.name }}
                                 </a>
                             </h3>
-                            <p class="mt-1 text-sm text-gray-500">{{ favorite.price }}</p>
+                            <p class="mt-1 text-sm text-gray-500">${{ product.price }}</p>
                         </div>
                     </div>
 
@@ -161,7 +132,7 @@
                 </div>
             </section>
         </main>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -186,6 +157,7 @@ import Header from "@/Shared/Header/Header.vue";
 import Hero from "@/Shared/Home/Hero.vue";
 import Footer from "@/Shared/Footer/Footer.vue";
 import DefaultLayout from "@/Pages/Client/Shared/DefaultLayout.vue";
+import rosesImage from "../../../assets/Home/roses.jpg"
 
 const favorites = [
     {
@@ -217,26 +189,43 @@ const favorites = [
 
 export default {
     layout: DefaultLayout,
+    data() {
+        return {
+            rosesImage: rosesImage
+        }
+    },
     components: {
-    Dialog,
-    DialogOverlay,
-    Popover,
-    PopoverButton,
-    PopoverGroup,
-    PopoverPanel,
-    Tab,
-    TabGroup,
-    TabList,
-    TabPanel,
-    TabPanels,
-    TransitionChild,
-    TransitionRoot,
-    MenuIcon,
-    SearchIcon,
-    ShoppingBagIcon,
-    XIcon,
-    Hero
-},
+        Dialog,
+        DialogOverlay,
+        Popover,
+        PopoverButton,
+        PopoverGroup,
+        PopoverPanel,
+        Tab,
+        TabGroup,
+        TabList,
+        TabPanel,
+        TabPanels,
+        TransitionChild,
+        TransitionRoot,
+        MenuIcon,
+        SearchIcon,
+        ShoppingBagIcon,
+        XIcon,
+        Hero
+    },
+    props: {
+        categories: Array,
+        products: Array
+    },
+    computed: {
+        categoryImagePath() {
+            return 'http://127.0.0.1:8000/storage/categoryImages/'
+        },
+        productImagePath() {
+            return 'http://127.0.0.1:8000/storage/productImages/'
+        },
+    },
     setup() {
         const open = ref(false)
 

@@ -26,7 +26,35 @@ use Inertia\Inertia;
 */
 /*** Home Page Route ***/
 Route::get('/', function () {
-    return Inertia::render('Client/Home');
+    $categories = \App\Models\Category::with('images')
+        ->take(5)
+        ->get()
+        ->map(function ($category) {
+            return [
+                "name" => $category->name,
+                "image" => $category->images->map(fn($image)=>[
+                    'src' => $image->src
+                ])
+            ];
+        });
+    $topSaleProducts = Product::with("images")
+        ->take(3)
+        ->get()
+        ->map(function ($product) {
+            return [
+                "name" => $product->name,
+                "image" => $product->images->map(function ($image) {
+                    return [
+                        "src" => $image->src
+                    ];
+                }),
+                "price" => $product->price
+            ];
+        });
+    return Inertia::render('Client/Home', [
+        "categories" => $categories,
+        "products" => $topSaleProducts
+    ]);
 });
 /*** Products Page Route ***/
 Route::get('/our-products', function (Request $request) {
