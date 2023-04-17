@@ -51,7 +51,7 @@
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                             <span :class="[{'bg-green-100 text-green-800': product.quantity > 0}, {'bg-red-100 text-red-800': product.quantity === 0}, 'inline-flex rounded-full px-2 text-xs font-semibold leading-5']">{{ product.quantity }}</span>
                                         </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">In Stock</td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ product.quantity !== 0 ? 'In Stock' : 'Out Stock' }}</td>
                                         <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                             <a href="#" class="text-indigo-600 hover:text-indigo-900"
                                             >Edit<span class="sr-only">, {{ product.name }}</span></a

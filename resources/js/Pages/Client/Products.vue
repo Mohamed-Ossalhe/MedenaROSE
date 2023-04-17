@@ -39,7 +39,7 @@
                                     <Disclosure as="div" v-for="category in categories" :key="category.id" class="border-t border-gray-200 px-4 py-6">
                                         <h3 class="-mx-2 -my-3 flow-root">
                                             <DisclosureButton class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                                                <span class="font-medium text-gray-900">{{ category.name }}</span>
+                                                <Link :href="'/our-products?category=' + category.id" class="font-medium text-gray-900">{{ category.name }}</Link>
                                             </DisclosureButton>
                                         </h3>
                                     </Disclosure>
@@ -72,7 +72,7 @@
                             <Disclosure as="div" v-for="category in categories" :key="category.id" class="border-b border-gray-200 py-6" v-slot="{ open }">
                                 <h3 class="-my-3 flow-root">
                                     <DisclosureButton class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                        <span class="font-medium text-gray-900">{{ category.name }}</span>
+                                        <Link preserve-scroll @click="onClickChange" v-model="categoryId" :href="'?category=' + category.id" class="font-medium text-gray-900">{{ category.name }}</Link>
                                     </DisclosureButton>
                                 </h3>
                             </Disclosure>
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import {
     Dialog,
     DialogPanel,
@@ -125,6 +125,11 @@ const mobileFiltersOpen = ref(false)
 
 export default {
     layout: DefaultLayout,
+    data() {
+        return {
+            categoryId: ref(this.category.category)
+        }
+    },
     components: {
         NotFound,
         Pagination,
@@ -146,7 +151,17 @@ export default {
         categories: Object,
         products: Object,
         filters: Object,
-        sort: Object
+        sort: Object,
+        category: Object
+    },
+    watch: {
+        categoryId: function (value) {
+            this.$inertia.get('/our-products', {category: value}, {
+                preserveState: true,
+                preserveScroll: true,
+                replace: true
+            })
+        }
     },
     setup() {
         return {

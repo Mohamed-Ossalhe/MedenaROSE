@@ -56,14 +56,14 @@
                         <label for="email-address" class="sr-only">Email address</label>
                         <input id="email-address" type="text" autocomplete="email" required="" class="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-4 text-base text-indigo-500 placeholder-gray-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500" />
                         <div class="ml-4 flex-shrink-0">
-                            <button type="submit" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign up</button>
+                            <button type="submit" class="w-full bg-primary border border-transparent rounded-md shadow-sm py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-primary/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50">Sign up</button>
                         </div>
                     </form>
                 </div>
             </div>
 
             <div class="border-t border-gray-200 py-10">
-                <p class="text-sm text-gray-500">Copyright &copy; 2021 Clothing Company Inc.</p>
+                <p class="text-sm text-gray-500">Copyright &copy; 2022 - {{date.getFullYear()}} MedenaROSE Inc.</p>
             </div>
         </div>
     </footer>
@@ -113,6 +113,11 @@ const footerNavigation = {
 }
 
 export default {
+    data() {
+        return {
+            date: new Date()
+        }
+    },
     components: {
         Dialog,
         DialogOverlay,
