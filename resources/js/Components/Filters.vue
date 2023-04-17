@@ -30,8 +30,8 @@ import {ref, watch} from "vue";
 const sortOptions = [
     { name: 'Name A -> Z', value: 'name_asc' },
     { name: 'Name Z -> A', value: 'name_desc' },
-    { name: 'Price 0 -> 10', value: 'price_desc'},
-    { name: 'Price 10 -> 0', value: 'price_asc'}
+    { name: 'Price 10 -> 0', value: 'price_desc'},
+    { name: 'Price 0 -> 10', value: 'price_asc'}
 ]
 export default {
     name: "Filters",
@@ -62,6 +62,7 @@ export default {
         sort: debounce(function (value) {
             this.$inertia.get(this.link, {sort: value}, {
                 preserveState: true,
+                preserveScroll: true,
                 replace: false
             })
         }, 300)
