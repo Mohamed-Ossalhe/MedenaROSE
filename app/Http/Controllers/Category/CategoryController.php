@@ -81,6 +81,9 @@ class CategoryController extends Controller
             'category_id' => $category->id
         ];
         $image = CategoryImage::create($imageData);
+        return redirect('admin/categories')->with([
+            "message" => "Category Created Successfully."
+        ]);
     }
 
     /**

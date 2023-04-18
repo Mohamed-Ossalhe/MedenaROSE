@@ -9,12 +9,12 @@
         </div>
         <div class="absolute top-0 inset-x-0 h-64 rounded-lg p-4 flex items-end justify-end overflow-hidden">
             <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50" />
-            <p class="relative text-lg font-semibold text-white">{{ product.price }}</p>
+            <p class="relative text-lg font-semibold text-white">{{ product.price }} dh</p>
         </div>
     </div>
     <div class="mt-6">
-        <button @click="addProductToCart" class="relative flex bg-gray-100 border border-transparent rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-200 cursor-pointer"
-        >Add to bag<span class="sr-only">, {{ product.name }}</span></button
+        <Link @click="addToCart" class="relative w-full flex bg-gray-100 border border-transparent rounded-md py-2 px-8 items-center justify-center text-sm font-medium text-gray-900 hover:bg-gray-200 cursor-pointer"
+        >add to cart<span class="sr-only">, {{ product.name }}</span></Link
         >
     </div>
 </template>
@@ -28,21 +28,18 @@ export default {
     computed: {
         imagePath() {
             return 'http://127.0.0.1:8000/storage/productImages/'
-        },
-        user() {
-            return this.$page.props.auth?.user
         }
     },
-     methods: {
-        addProductToCart() {
-            this.$inertia.post('/admin/orders', {
-                user_id: this.user.id,
-                order_address: 'dsdkcsdc',
-                total_price: 100,
-                status: 'inCart'
+    methods: {
+        addToCart() {
+            this.$inertia.post('/cart', {
+                id: this.product.id,
+                quantity: 1
+            }, {
+                preserveState: true
             })
         }
-     }
+    }
 }
 </script>
 

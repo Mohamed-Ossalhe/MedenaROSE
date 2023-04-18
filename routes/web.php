@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminAuth\AdminController;
+use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Order\OrderController;
@@ -25,8 +26,8 @@ use Inertia\Inertia;
 Route::get('/', [HomeController::class, 'index']);
 /*** Products Page Route ***/
 Route::get('/our-products', [HomeController::class, 'products']);
-/*** Cart Route ***/
-Route::get('/cart', [HomeController::class, 'cart']);
+/*** Product Page ***/
+Route::get('/our-products/{product}', [HomeController::class, 'showProduct'])->name("product_page");
 
 /*** User Auth Routes ***/
 Route::get('/signup', [UserController::class, 'create']);
@@ -65,4 +66,7 @@ Route::middleware('auth', TrackVisitors::class)->group(function () {
     });
     /*** Client logout ***/
     Route::post('/logout', [UserController::class, 'logout']);
+
+    /*** Cart Routes ***/
+    Route::resource('cart', CartController::class);
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -96,9 +97,43 @@ class HomeController extends Controller
             "category" => $request->only(['category'])
         ]);
     }
-    // cart page
-    public function cart(): Response
-    {
-        return Inertia::render('Client/Cart');
+
+    // show product
+    public function showProduct(Request $request) {
+        $product = Product::find($request->id);
+        $relatedProducts = Product::with('images')
+            ->getQuery()
+            ->where('category_id', $product->category_id)
+            ->where('id', '<>', $product->id)
+            ->take(4)
+            ->get();
+        return Inertia::render('Client/ProductPage', [
+            "product" => [
+                "id" => $product->id,
+                "name" => $product->name,
+                "description" => $product->description,
+                "price" => $product->price,
+                "images" => $product->images->map(function ($image) {
+                    return [
+                        'id' => $image->id,
+                        'src' => $image->src
+                    ];
+                })
+            ],
+            "relatedProducts" => $relatedProducts->map(function ($product) {
+                return [
+                    "id" => $product->id,
+                    "name" => $product->name,
+                    "description" => $product->description,
+                    "price" => $product->price,
+                    "images" => $product->images->map(function ($image) {
+                        return [
+                            'id' => $image->id,
+                            'src' => $image->src
+                        ];
+                    })
+                ];
+            })
+        ]);
     }
 }

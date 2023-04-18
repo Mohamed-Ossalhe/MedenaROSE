@@ -1,5 +1,6 @@
 <template>
     <Head title="Products"/>
+    <SuccessAlert v-if="flashMessage">{{flashMessage}}</SuccessAlert>
     <div class="mt-5">
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
@@ -99,6 +100,7 @@ import { XIcon } from '@heroicons/vue/outline'
 import { ChevronDownIcon } from '@heroicons/vue/solid'
 import Filters from "@/Components/Filters.vue";
 import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
+import SuccessAlert from "@/Components/SuccessAlert.vue";
 
 export default {
     name: 'Products',
@@ -109,6 +111,7 @@ export default {
         }
     },
     components: {
+        SuccessAlert,
         NotFound,
         Filters,
         Pagination,
@@ -138,6 +141,9 @@ export default {
     computed: {
         image() {
             return 'http://127.0.0.1:8000/storage/productImages/'
+        },
+        flashMessage() {
+            return this.$page.props.flash?.message;
         }
     }
 }
