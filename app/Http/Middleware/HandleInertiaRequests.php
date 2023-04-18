@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -45,7 +47,15 @@ class HandleInertiaRequests extends Middleware
                     "image" => Auth::user()->image,
                     "role" => Auth::user()->role
                 ]
-            ] : null
+            ] : null,
+            'flash' => [
+                'message' => fn () => $request->session()->get('message')
+            ],
+            'cart' => [
+                'totalOrders' => Auth::user() ? Cart::where('user_id', Auth::user()->id)
+                    ->get()
+                    ->count() : 0
+            ]
         ]);
     }
 }

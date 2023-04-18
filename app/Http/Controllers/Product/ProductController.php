@@ -98,7 +98,9 @@ class ProductController extends Controller
             ];
             $productImage = ProductImage::create($productImageData);
         }
-        return redirect('admin/products');
+        return redirect('admin/products')->with([
+            "message" => "Product Created Successfully."
+        ]);
     }
 
     /**
@@ -131,5 +133,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+        $totalProductInCategory = Product::where('category_id', $product->category_id)->get()->count();
+        $category = Category::find($product->category_id);
+        $category->update(['quantity' => $totalProductInCategory]);
     }
 }

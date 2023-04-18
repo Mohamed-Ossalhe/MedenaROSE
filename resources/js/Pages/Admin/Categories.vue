@@ -1,5 +1,6 @@
 <template>
     <Head title="Categories"/>
+    <SuccessAlert v-if="flashMessage">{{flashMessage}}</SuccessAlert>
     <div class="sm:flex sm:items-center my-5">
         <div class="sm:flex-auto">
             <h1 class="text-xl font-semibold text-gray-900">Categories</h1>
@@ -12,7 +13,7 @@
     <Filters :link="'/admin/categories'" :sort="sort" :filters="filters" />
 
     <div v-if="categories.data.length > 0">
-        <div class="h-96">
+        <div>
             <ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
                 <li v-for="category in categories.data" :key="category.id" class="relative">
                     <div class="group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500 overflow-hidden">
@@ -66,6 +67,7 @@ import { XIcon } from '@heroicons/vue/outline'
 import { ChevronDownIcon } from '@heroicons/vue/solid'
 import Filters from "@/Components/Filters.vue";
 import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
+import SuccessAlert from "@/Components/SuccessAlert.vue";
 
 export default {
     name: "Categories",
@@ -76,6 +78,7 @@ export default {
         sort: Object
     },
     components: {
+        SuccessAlert,
         NotFound,
         Pagination,
         Dialog,
@@ -100,6 +103,9 @@ export default {
     computed: {
         image() {
             return 'http://127.0.0.1:8000/storage/categoryImages/'
+        },
+        flashMessage() {
+            return this.$page.props.flash?.message
         }
     }
 }

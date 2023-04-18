@@ -7,6 +7,7 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -66,12 +67,18 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $orderData = [
-            'user_id' => $request->user_id,
-            'order_address' => $request->order_address,
-            'total_price' => $request->total_price,
+            'user_id' => Auth::user()->id,
+            'order_address' => Auth::user()->street_address,
+            'total_price' => $request->total_price * $request->quantity,
             'status' => $request->status
         ];
-        dd($orderData);
+        $order = Order::create($orderData);
+        $order->products()->attach([
+            ["product_id" => $request->id, "quantity" => 1]
+        ]);
+        return back()->with([
+            "message" => "Order Placed Successfully."
+        ]);
     }
 
     /**
