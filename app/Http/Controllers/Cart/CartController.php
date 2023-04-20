@@ -101,7 +101,13 @@ class CartController extends Controller
      */
     public function update(Request $request, Cart $cart)
     {
-        //
+        $cartData = $request->validate([
+            'quantity' => 'required'
+        ]);
+        $cart->update(["quantity" => $cartData["quantity"]]);
+        return back()->with([
+            "message" => "Cart Updated Successfully."
+        ]);
     }
 
     /**

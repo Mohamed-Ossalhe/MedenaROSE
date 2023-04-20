@@ -28,7 +28,7 @@
 
                                     <div class="mt-4 sm:mt-0 sm:pr-9">
                                         <label :for="`quantity-${product.products.name}`" class="sr-only">Quantity, {{ product.products.name }}</label>
-                                        <select v-on:change="selectQuantity" :id="`quantity-${product.products.name}`" :name="`quantity-${product.products.name}`" class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <select v-on:change="selectQuantity(product.id, $event)" :id="`quantity-${product.products.name}`" :name="`quantity-${product.products.name}`" class="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                                             <option value="1">1</option>
                                             <option value="2">2</option>
                                             <option value="3">3</option>
@@ -95,23 +95,20 @@ import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XIcon } from '@heroicons/
 import product from "../../Components/Product.vue";
 import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
 import {ref} from "vue";
-import {useForm} from "@inertiajs/vue3";
 
 export default {
     name: "Cart",
     layout: DefaultLayout,
     data() {
         return {
-            formData: useForm({
-                productId: ref(''),
-                quantity: ref(1)
-            })
+            productId: '',
+            quantity: 1
         }
     },
     methods: {
-        selectQuantity(e) {
+        selectQuantity(productId, e) {
             this.quantity = e.target.value
-            console.log(this.quantity)
+            this.productId = productId
         }
     },
     components: {
@@ -134,8 +131,10 @@ export default {
         }
     },
     watch: {
-        quantity: function(value) {
-            this.$inertia.patch(`/cart/`)
+        quantity: function() {
+            this.$inertia.patch('/cart/' + this.productId, {
+                quantity: this.quantity
+            })
         }
     }
 }
