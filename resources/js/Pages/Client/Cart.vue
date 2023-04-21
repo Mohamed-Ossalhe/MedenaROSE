@@ -1,8 +1,9 @@
 <template>
+    <Head title="Cart" />
     <div class="bg-white">
         <div class="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
-            <form class="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+            <form @submit.prevent="submitCheckout" class="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
                 <section aria-labelledby="cart-heading" class="lg:col-span-7">
                     <h2 id="cart-heading" class="sr-only">Items in your shopping cart</h2>
 
@@ -79,6 +80,16 @@
                         </div>
                     </dl>
 
+                    <div v-if="total_price" class="payment-wrapper my-5">
+                        <h2 class="capitalize text-md text-gray-600">payment method:</h2>
+                        <div class="payment-methods flex justify-between my-3">
+                            <div v-for="method in paymentMethods" class="method flex items-center gap-2">
+                                <input v-model="checkoutData.payment_method" :checked="method.value === 'credit-card'" type="radio" name="paymentMethod" :id="'payment'+method.id" :value="method.value">
+                                <label class="text-sm text-gray-700 capitalize" :for="'payment'+method.id">{{method.name}}</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mt-6">
                         <button type="submit" class="w-full bg-primary/70 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary/50">Checkout</button>
                     </div>
@@ -94,7 +105,22 @@ import DefaultLayout from "@/Pages/Client/Shared/DefaultLayout.vue";
 import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XIcon } from '@heroicons/vue/solid'
 import product from "../../Components/Product.vue";
 import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
+import {useForm} from "@inertiajs/vue3";
+
+
+const paymentMethods = [
+    {
+        id: 'credit',
+        name: "credit card",
+        value: 'credit-card'
+    },
+    {
+        id: 'cash',
+        name: "cash on delivery",
+        value: "cash-on-delivery"
+    }
+]
 
 export default {
     name: "Cart",
@@ -102,13 +128,31 @@ export default {
     data() {
         return {
             productId: '',
-            quantity: 1
+            quantity: 1,
+            checkoutData: useForm({
+                payment_method: 'credit-card',
+                total_price: this.total_price,
+                status: 'pending'
+            })
         }
     },
     methods: {
         selectQuantity(productId, e) {
             this.quantity = e.target.value
             this.productId = productId
+        },
+        submitCheckout() {
+            switch (this.checkoutData.payment_method) {
+                case "credit-card":
+                    this.checkoutData.post('/payment', {
+                        preserveScroll: true,
+                        preserveState: true
+                    });
+                    break;
+                case 'cash-on-delivery':
+                    alert("paid")
+                    break;
+            }
         }
     },
     components: {
@@ -135,6 +179,14 @@ export default {
             this.$inertia.patch('/cart/' + this.productId, {
                 quantity: this.quantity
             })
+        },
+        total_price(newValue) {
+            this.checkoutData.totalPrice = newValue;
+        }
+    },
+    setup() {
+        return {
+            paymentMethods
         }
     }
 }

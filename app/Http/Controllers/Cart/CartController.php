@@ -38,7 +38,7 @@ class CartController extends Controller
                     "inStock" => $cart->quantity > 0,
                 ];
             }),
-            "total_price" => $totalPrice
+            "total_price" => $totalPrice,
         ]);
     }
 

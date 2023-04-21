@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminAuth\AdminController;
 use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Cart\PaymentController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Order\OrderController;
@@ -61,12 +62,18 @@ Route::middleware('auth', TrackVisitors::class)->group(function () {
 
         /*** Orders Routes ***/
         Route::resource('orders', OrderController::class);
+
         /*** Admin LogOut Route ***/
         Route::post('/admin-logout', [AdminController::class, 'logout']);
     });
+    /*** Payment Routes ***/
+    Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
+    Route::get('/success', [PaymentController::class, 'success'])->name('success');
+    Route::get('/cancel', [PaymentController::class, 'cancel'])->name('cancel');
+
     /*** Client logout ***/
     Route::post('/logout', [UserController::class, 'logout']);
 
     /*** Cart Routes ***/
-    Route::resource('cart', CartController::class);
+    Route::resource('cart', CartController::class)->name('index', 'cart');
 });

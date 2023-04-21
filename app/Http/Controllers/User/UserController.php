@@ -30,7 +30,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('products');
+            return redirect()->intended('our-products');
         }
 
         return back()->withErrors([

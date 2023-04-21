@@ -11,12 +11,13 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'order_address',
+        'shipping_address',
         'total_price',
-        'status'
+        'payment_method',
+        'status',
+        'delivery_date'
     ];
 
-    // TODO: ADD relations to the modals
     public function products() {
         return $this->belongsToMany(Product::class, 'order_items', 'order_id', 'product_id');
     }
