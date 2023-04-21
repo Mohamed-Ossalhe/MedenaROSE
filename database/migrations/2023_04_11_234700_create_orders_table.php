@@ -14,9 +14,11 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('order_address');
+            $table->string('shipping_address');
             $table->string('total_price');
-            $table->enum('status', ['inCart', 'sold']);
+            $table->enum('payment_method', ['credit-card', 'paypal', 'cash-on-delivery']);
+            $table->enum('status', ['pending', 'shipped', 'delivered']);
+            $table->date('delivery_date');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
