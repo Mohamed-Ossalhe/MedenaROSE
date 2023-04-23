@@ -8,8 +8,9 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Inertia\Response;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -17,7 +18,7 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $sort_options = ['price_asc', 'price_desc', 'name_asc', 'name_desc'];
         $products = Product::query()
@@ -61,7 +62,7 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         $categories = Category::all()->map(fn($category) => [
             'id' => $category->id,
@@ -75,7 +76,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductRequest $request)
+    public function store(StoreProductRequest $request): RedirectResponse
     {
         $productData = [
             'name' => $request->name,
@@ -106,7 +107,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Product $product)
+    public function show(Product $product): Response
     {
         //
     }
@@ -114,9 +115,16 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
+    public function edit(Product $product): Response
     {
-        //
+        $categories = Category::all()->map(fn($category) => [
+            'id' => $category->id,
+            'name' => $category->name
+        ]);
+        return Inertia::render('Admin/Forms/UpdateProductForm', [
+            'categories' => $categories,
+            'product' => $product
+        ]);
     }
 
     /**
@@ -124,17 +132,37 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $productData = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'image' => $request->image,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'category_id' => $request->category_id
+        ];
+        foreach ($productData['image'] as $image) {
+            $imageFile = $image->store('public/ProductImages');
+            $imageName = explode('/', $imageFile);
+            $productImageData = [
+                'src' => $imageName[2],
+                'product_id' => $product->id
+            ];
+            $productImage = ProductImage::create($productImageData);
+        }
+        $product->update($productData);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product): RedirectResponse
     {
         $product->delete();
         $totalProductInCategory = Product::where('category_id', $product->category_id)->get()->count();
         $category = Category::find($product->category_id);
         $category->update(['quantity' => $totalProductInCategory]);
+        return back()->with([
+            "message" => "Product Deleted Successfully!"
+        ]);
     }
 }
