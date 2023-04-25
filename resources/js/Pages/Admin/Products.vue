@@ -1,6 +1,6 @@
 <template>
     <Head title="Products"/>
-    <SuccessAlert v-if="flashMessage">{{flashMessage}}</SuccessAlert>
+    <SuccessAlert v-if="message">{{message}}</SuccessAlert>
     <div class="mt-5">
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
@@ -54,8 +54,8 @@
                                         </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ product.quantity !== 0 ? 'In Stock' : 'Out Stock' }}</td>
                                         <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                            <a href="#" class="text-indigo-600 hover:text-indigo-900"
-                                            >Edit<span class="sr-only">, {{ product.name }}</span></a
+                                            <Link preserve-scroll :href="'/admin/products/'+ product.id +'/edit'" class="text-indigo-600 hover:text-indigo-900"
+                                            >Edit<span class="sr-only">, {{ product.name }}</span></Link
                                             >
                                             <Link preserve-scroll as="button" method="DELETE" :href="'/admin/products/'+ product.id" class="text-red-600 hover:text-red-900 ml-2"
                                             >Delete<span class="sr-only">, {{ product.name }}</span></Link
@@ -107,7 +107,7 @@ export default {
     layout: Layout,
     data() {
         return {
-            noFileFound: noFileFound
+            message: null
         }
     },
     components: {
@@ -141,9 +141,17 @@ export default {
     computed: {
         image() {
             return 'http://127.0.0.1:8000/storage/productImages/'
-        },
-        flashMessage() {
-            return this.$page.props.flash?.message;
+        }
+    },
+    mounted() {
+        this.message = this.$page.props.flash?.message;
+        setTimeout(() => {
+            this.message = null
+        }, 5000)
+    },
+    setup() {
+        return {
+            noFileFound
         }
     }
 }

@@ -76,7 +76,7 @@
                         </div>
                         <div class="border-t border-gray-200 pt-4 flex items-center justify-between">
                             <dt class="text-base font-medium text-gray-900">Order total</dt>
-                            <dd class="text-base font-medium text-gray-900">${{total_price}}</dd>
+                            <dd class="text-base font-medium text-gray-900">${{ total_price }}</dd>
                         </div>
                     </dl>
 
@@ -91,7 +91,7 @@
                     </div>
 
                     <div class="mt-6">
-                        <button type="submit" class="w-full bg-primary/70 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary/50">Checkout</button>
+                        <button type="submit" :disabled="carts.length === 0" class="w-full bg-primary/70 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary/50 disabled:cursor-not-allowed">Checkout</button>
                     </div>
                 </section>
             </form>
@@ -105,8 +105,9 @@ import DefaultLayout from "@/Pages/Client/Shared/DefaultLayout.vue";
 import { CheckIcon, ClockIcon, QuestionMarkCircleIcon, XIcon } from '@heroicons/vue/solid'
 import product from "../../Components/Product.vue";
 import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
-import {ref, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import {useForm} from "@inertiajs/vue3";
+import {sum} from "lodash";
 
 
 const paymentMethods = [
@@ -131,9 +132,10 @@ export default {
             quantity: 1,
             checkoutData: useForm({
                 payment_method: 'credit-card',
-                total_price: this.total_price,
+                totalPrice: this.total_price,
                 status: 'pending'
-            })
+            }),
+            total_price: reactive(this.total_price)
         }
     },
     methods: {
@@ -150,7 +152,8 @@ export default {
                     });
                     break;
                 case 'cash-on-delivery':
-                    alert("paid")
+                    //alert("paid")
+                    console.log(this.checkoutData)
                     break;
             }
         }
@@ -164,7 +167,7 @@ export default {
     },
     props: {
         carts: Array,
-        total_price: Number
+        total_price: {type: Number, required: true}
     },
     computed: {
         product() {
@@ -175,18 +178,26 @@ export default {
         }
     },
     watch: {
-        quantity: function() {
-            this.$inertia.patch('/cart/' + this.productId, {
-                quantity: this.quantity
-            })
+        quantity:{
+            handler(newVal) {
+                return this.$inertia.patch(`/cart/${this.productId}`, {
+                    quantity: newVal
+                }, {
+                    preserveScroll: true
+                })
+            },
+            immediate: true
         },
-        total_price(newValue) {
-            this.checkoutData.totalPrice = newValue;
+        total_price:{
+            handler(newVal) {
+                return this.checkoutData.totalPrice = newVal;
+            },
+            immediate: true
         }
     },
     setup() {
         return {
-            paymentMethods
+            paymentMethods,
         }
     }
 }
