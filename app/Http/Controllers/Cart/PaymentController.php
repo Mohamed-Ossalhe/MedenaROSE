@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cart;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Cart;
+use App\Models\Order;
 use http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -19,23 +20,25 @@ class PaymentController extends Controller
      */
     public function payment(StoreOrderRequest $request): \Symfony\Component\HttpFoundation\Response
     {
+        $products = Cart::all()
+            ->where('user_id', Auth::user()->id);
         $orderData = [
             "user_id" => Auth::user()->id,
             "shipping_address" => Auth::user()->street_address . ', ' . Auth::user()->city . ', ' . Auth::user()->region . ', ' . Auth::user()->zip_code,
-            "total_price" => $request->total_price,
+            "totalPrice" => $request->totalPrice,
             "payment_method" => $request->payment_method,
             "status" => $request->status,
-            "delivery_date" => now()->addDays(3)
+            "delivery_date" => now()->addDays(3),
+            "products" => []
         ];
-
-        $products = Cart::all()
-            ->where('user_id', Auth::user()->id);
+        //dd($orderData);
 
         switch ($orderData["payment_method"]) {
             case 'credit-card':
                 Stripe::setApiKey(env("STRIPE_SECRET"));
                 $lineItems = [];
                 foreach ($products as $product) {
+                    $orderData["products"][] = ['id' => $product->products->id, 'quantity' => $product->quantity];
                     $lineItems[] = [
                         'price_data' => [
                             'currency' => 'usd',
@@ -54,6 +57,7 @@ class PaymentController extends Controller
                     'success_url' => route('success', [], true),
                     'cancel_url' => route('cancel', [], true),
                 ]);
+                session(['orderData' => $orderData]);
                 return Inertia::location($checkout_session->url);
                 break;
             case 'cash-on-delivery':
@@ -67,6 +71,15 @@ class PaymentController extends Controller
      */
     public function success(): Response
     {
+        //dd(session('orderData'));
+        $orderData = session('orderData');
+        $order = Order::create($orderData);
+        foreach ($orderData["products"] as $product) {
+            //dd($product);
+            $order->products()->attach($product["id"], ["order_id" => $order->id, 'quantity' => $product["quantity"]]);
+        };
+        Cart::where('user_id', Auth::user()->id)
+            ->delete();
         return Inertia::render('Client/Payment/Success');
     }
 

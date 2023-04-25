@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('shipping_address');
-            $table->string('total_price');
+            $table->string('totalPrice');
             $table->enum('payment_method', ['credit-card', 'paypal', 'cash-on-delivery']);
             $table->enum('status', ['pending', 'shipped', 'delivered']);
             $table->date('delivery_date');

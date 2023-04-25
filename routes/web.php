@@ -66,6 +66,10 @@ Route::middleware('auth', TrackVisitors::class)->group(function () {
         /*** Admin LogOut Route ***/
         Route::post('/admin-logout', [AdminController::class, 'logout']);
     });
+
+    /*** Client Profile ***/
+    Route::get('/profile/{id}', [UserController::class, 'show'])->name('profile');
+
     /*** Payment Routes ***/
     Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');
     Route::get('/success', [PaymentController::class, 'success'])->name('success');
@@ -76,4 +80,5 @@ Route::middleware('auth', TrackVisitors::class)->group(function () {
 
     /*** Cart Routes ***/
     Route::resource('cart', CartController::class)->name('index', 'cart');
+    Route::patch('cart', [CartController::class, 'update']);
 });

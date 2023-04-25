@@ -130,26 +130,18 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
+    public function update(Request $request, Product $product)
     {
-        $productData = [
-            'name' => $request->name,
-            'description' => $request->description,
-            'image' => $request->image,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-            'category_id' => $request->category_id
-        ];
-        foreach ($productData['image'] as $image) {
-            $imageFile = $image->store('public/ProductImages');
-            $imageName = explode('/', $imageFile);
-            $productImageData = [
-                'src' => $imageName[2],
-                'product_id' => $product->id
-            ];
-            $productImage = ProductImage::create($productImageData);
-        }
-        $product->update($productData);
+        dd($request);
+        $productData = $request->validate([
+            'name' => 'string',
+            'description' => 'string',
+            'image' => 'array',
+            'price' => 'integer',
+            'quantity' => 'integer',
+            'category_id' => 'string'
+        ]);
+        dd($productData);
     }
 
     /**

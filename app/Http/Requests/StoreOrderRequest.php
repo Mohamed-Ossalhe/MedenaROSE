@@ -22,7 +22,7 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'total_price' => 'required|integer',
+            'totalPrice' => 'required|integer',
             'payment_method' => 'required|string',
             'status' => 'required|string'
         ];
