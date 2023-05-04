@@ -77,7 +77,7 @@ class HomeController extends Controller
             })->when($request->input('category'), function ($query, $categroy) {
                 $query->where('category_id', $categroy);
             })
-            ->paginate(10)
+            ->paginate(8)
             ->withQueryString()
             ->through(fn($product) => [
                 'id' => $product->id,
@@ -99,10 +99,10 @@ class HomeController extends Controller
     }
 
     // show product
-    public function showProduct(Request $request) {
-        $product = Product::find($request->id);
+    public function showProduct(string $id) {
+        $product = Product::find($id);
         $relatedProducts = Product::with('images')
-            ->getQuery()
+            //->getQuery()
             ->where('category_id', $product->category_id)
             ->where('id', '<>', $product->id)
             ->take(4)
@@ -120,20 +120,20 @@ class HomeController extends Controller
                     ];
                 })
             ],
-            "relatedProducts" => $relatedProducts->map(function ($product) {
-                return [
-                    "id" => $product->id,
-                    "name" => $product->name,
-                    "description" => $product->description,
-                    "price" => $product->price,
-                    "images" => $product->images->map(function ($image) {
-                        return [
-                            'id' => $image->id,
-                            'src' => $image->src
-                        ];
-                    })
-                ];
-            })
+            "relatedProducts" => $relatedProducts//$relatedProducts->map(function ($product) {
+//                return [
+//                    "id" => $product->id,
+//                    "name" => $product->name,
+//                    "description" => $product->description,
+//                    "price" => $product->price,
+//                    "images" => $product->images->map(function ($image) {
+//                        return [
+//                            'id' => $image->id,
+//                            'src' => $image->src
+//                        ];
+//                    })
+              //  ];
+            //})
         ]);
     }
 }

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import image from "../../assets/Hero/1.png"
+import image from "../../assets/Products-Hero/el-kelaa-mgouna.webp"
 export default {
     name: "AuthLayout",
     data() {

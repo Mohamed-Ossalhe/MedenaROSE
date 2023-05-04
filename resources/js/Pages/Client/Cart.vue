@@ -1,6 +1,7 @@
 <template>
     <Head title="Cart" />
     <div class="bg-white">
+        <SuccessAlert v-if="message">{{message}}</SuccessAlert>
         <div class="max-w-2xl mx-auto pt-16 pb-24 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
             <form @submit.prevent="submitCheckout" class="mt-12 lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
@@ -108,6 +109,7 @@ import NotFound from "@/Pages/Admin/Shared/NotFound.vue";
 import {reactive, ref, watch} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import {sum} from "lodash";
+import SuccessAlert from "@/Components/SuccessAlert.vue";
 
 
 const paymentMethods = [
@@ -135,7 +137,8 @@ export default {
                 totalPrice: this.total_price,
                 status: 'pending'
             }),
-            total_price: reactive(this.total_price)
+            total_price: reactive(this.total_price),
+            message: null
         }
     },
     methods: {
@@ -152,13 +155,23 @@ export default {
                     });
                     break;
                 case 'cash-on-delivery':
-                    //alert("paid")
-                    console.log(this.checkoutData)
+                    this.checkoutData.post('/payment', {
+                        preserveScroll: true,
+                        preserveState: true
+                    });
+                    this.flashMessage()
                     break;
             }
+        },
+        flashMessage() {
+            this.message = this.$page.props.flash?.message;
+            setTimeout(() => {
+                this.message = null
+            }, 5000)
         }
     },
     components: {
+        SuccessAlert,
         NotFound,
         CheckIcon,
         ClockIcon,
@@ -175,12 +188,12 @@ export default {
         },
         imagePath() {
             return 'http://127.0.0.1:8000/storage/productImages/'
-        }
+        },
     },
     watch: {
         quantity:{
             handler(newVal) {
-                return this.$inertia.patch(`/cart/${this.productId}`, {
+                this.$inertia.patch(`/cart/${this.productId}`, {
                     quantity: newVal
                 }, {
                     preserveScroll: true

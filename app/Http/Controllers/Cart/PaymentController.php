@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOrderRequest;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -61,9 +62,24 @@ class PaymentController extends Controller
                 return Inertia::location($checkout_session->url);
                 break;
             case 'cash-on-delivery':
-                dd("cash {$orderData["total_price"]}");
+                foreach ($products as $product) {
+                    $orderData["products"][] = ['id' => $product->products->id, 'quantity' => $product->quantity];
+                }
+                //$order = ['orderData' => $orderData];
+                //dd($orderData);
+                $order = Order::create($orderData);
+                foreach ($orderData["products"] as $product) {
+                    $orderProduct = Product::find($product["id"]);
+                    $orderProduct->update(['quantity' => $orderProduct->quantity - $product["quantity"]]);
+                    $order->products()->attach($product["id"], ["order_id" => $order->id, 'quantity' => $product["quantity"]]);
+                };
+                Cart::where('user_id', Auth::user()->id)
+                    ->delete();
                 break;
         }
+        return back()->with([
+            "message" => "Your Order Placed Successfully."
+        ]);
     }
 
     /**
@@ -71,11 +87,13 @@ class PaymentController extends Controller
      */
     public function success(): Response
     {
-        //dd(session('orderData'));
         $orderData = session('orderData');
+        //dd($orderData['payment_method']);
         $order = Order::create($orderData);
         foreach ($orderData["products"] as $product) {
             //dd($product);
+            $orderProduct = Product::find($product["id"]);
+            $orderProduct->update(['quantity' => $orderProduct->quantity - $product["quantity"]]);
             $order->products()->attach($product["id"], ["order_id" => $order->id, 'quantity' => $product["quantity"]]);
         };
         Cart::where('user_id', Auth::user()->id)

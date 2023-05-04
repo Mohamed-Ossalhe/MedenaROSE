@@ -7,9 +7,11 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Inertia\Response;
 use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
@@ -47,9 +49,11 @@ class OrderController extends Controller
             ->withQueryString()
             ->through(fn($order) => [
                 'id' => $order->id,
-                'order_address' => $order->order_address,
-                'total_price' => $order->total_price,
-                'status' => $order->status
+                'shipping_address' => $order->shipping_address,
+                'totalPrice' => $order->totalPrice,
+                'status' => $order->status,
+                'deliveryDate' => $order->delivery_date,
+                'products' => $order->products
             ]);
         return Inertia::render('Admin/Orders', [
             "orders" => $orders,
@@ -77,9 +81,12 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Order $order): Response
     {
-        //
+        $orderProducts = $order->products;
+        return Inertia::render('Admin/ViewOrders', [
+            "products" => $orderProducts
+        ]);
     }
 
     /**
@@ -95,7 +102,12 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, Order $order)
     {
-        //
+        $orderStatus = $request->status;
+        //dd($orderStatus, $order);
+        $order->update(['status' => $orderStatus]);
+        return back()->with([
+            "message" => "Order ". $order->id ." Status Changed to " . $orderStatus
+        ]);
     }
 
     /**

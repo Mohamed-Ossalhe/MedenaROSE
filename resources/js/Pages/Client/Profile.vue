@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper grid grid-cols-1 md:grid-cols-5">
-        <div class="mt-6 col-start-2 col-end-5">
+        <div class="mt-6 md:col-start-2 md:col-end-5 px-4">
             <h1 class="text-xl my-3">Profile</h1>
             <form @submit.prevent="onSubmit" class="space-y-6">
                 <div>
@@ -32,6 +32,14 @@
                         <input v-model="formData.email" id="email" name="email" type="email" autocomplete="email"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
                     </div>
                     <p v-if="formData.errors.email" v-text="formData.errors.email" class="text-sm text-red-500"></p>
+                </div>
+
+                <div class="space-y-1">
+                    <label for="password" class="block text-sm font-medium text-gray-700"> Old Password </label>
+                    <div class="mt-1">
+                        <input v-model="formData.old_password" id="password" name="password" type="password" autocomplete="current-password"  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+                    </div>
+                    <p v-if="formData.errors.old_password" v-text="formData.errors.old_password" class="text-sm text-red-500"></p>
                 </div>
 
                 <div class="space-y-1">
@@ -121,8 +129,9 @@ export default {
         return {
             formData: useForm({
                 name: this.user.name,
-                image: this.user.image,
+                image: null,
                 email: this.user.email,
+                old_password: '',
                 password: '',
                 password_confirmation: '',
                 birth_date: this.user.birth_date,
@@ -164,7 +173,7 @@ export default {
             this.formData.city = e.target.value
         },
         onSubmit: function () {
-            this.formData.post('/signup')
+            this.formData.patch('/profile/' + this.user.id)
         }
     },
     setup() {

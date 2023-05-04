@@ -141,9 +141,43 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreUserRequest $request, string $id)
+    public function update(UpdateUserRequest $request, String $id)
     {
-        //
+        //dd($request);
+        $userData = [
+            'name' => $request->name,
+            'image' => $request->image,
+            'email' => $request->email,
+            'old_password' => $request->old_password,
+            'password' => $request->password,
+            'birth_date' => $request->birth_date,
+            'phone_number' => $request->phone_number,
+            'region' => $request->region,
+            'city' => $request->city,
+            'zip_code' => $request->zip_code,
+            'street_address' => $request->street_address,
+            'role' => 'client'
+        ];
+        //dd($userData);
+        $user = User::find($id);
+        //dd($user);
+        if(!password_verify($userData['old_password'], $user->password)) {
+            //dd('incorrect');
+            return back()->with([
+                "message" => "Uncorrected Password"
+            ]);
+        }
+        //dd('correct');
+        if(is_array($userData['image'])) {
+            //dd('array');
+            $imageFile = $userData['image']->store('public/usersImages');
+            $imageName = explode('/', $imageFile);
+            $userData['image'] = $imageName[2];
+        }
+        $user->update($userData);
+        return back()->with([
+            "message" => "Profile Information Updated Successfully"
+        ]);
     }
 
     /**

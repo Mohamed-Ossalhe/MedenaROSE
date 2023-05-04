@@ -12,6 +12,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Response;
 use Inertia\Inertia;
+use JetBrains\PhpStorm\NoReturn;
 
 class ProductController extends Controller
 {
@@ -40,7 +41,7 @@ class ProductController extends Controller
                         break;
                 }
             })
-            ->paginate(10)
+            ->paginate(4)
             ->withQueryString()
             ->through(fn($product) => [
                 'id' => $product->id,
@@ -130,18 +131,20 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
-    {
-        dd($request);
-        $productData = $request->validate([
-            'name' => 'string',
-            'description' => 'string',
-            'image' => 'array',
-            'price' => 'integer',
-            'quantity' => 'integer',
-            'category_id' => 'string'
+     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
+     {
+        //dd($request);
+        $productData = [
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'category_id' => $request->category_id
+        ];
+        $product->update($productData);
+        return back()->with([
+            "message" => "Product Updated Successfully"
         ]);
-        dd($productData);
     }
 
     /**
