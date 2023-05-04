@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Cart;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -59,7 +60,12 @@ class CartController extends Controller
             "id" => "required",
             "quantity" => "required"
         ]);
-
+        $product = Product::find($data['id']);
+        if($product->quantity <=0 ) {
+            return back()->with([
+                "message" => "Out Of Stock"
+            ]);
+        }
         $cartExist = Cart::where('product_id', $data["id"])
             ->where('user_id', Auth::user()->id)
             ->first();

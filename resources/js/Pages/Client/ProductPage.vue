@@ -212,10 +212,12 @@ export default {
                 total_price: this.product.price,
                 status: 'inCart'
             }
-            this.$inertia.post('/order', orderData, {
+            this.$inertia.post('/cart', {
+                id: this.product.id,
+                quantity: 1
+            }, {
                 preserveState: true,
-                preserveScroll: true,
-                replace: false
+                preserveScroll: true
             })
         }
     }

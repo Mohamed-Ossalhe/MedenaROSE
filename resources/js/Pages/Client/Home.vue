@@ -10,7 +10,7 @@
                     <div class="py-16 sm:py-24 xl:max-w-7xl xl:mx-auto xl:px-8">
                         <div class="px-4 sm:px-6 sm:flex sm:items-center sm:justify-between lg:px-8 xl:px-0">
                             <h2 class="text-2xl font-extrabold tracking-tight text-gray-900">Shop by Category</h2>
-                            <a href="#" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">Browse all categories<span aria-hidden="true"> &rarr;</span></a>
+                            <Link href="/our-products" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">Browse all categories<span aria-hidden="true"> &rarr;</span></Link>
                         </div>
 
                         <div class="mt-4 flow-root">
@@ -55,7 +55,7 @@
                     <div class="max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
                         <div class="sm:flex sm:items-baseline sm:justify-between">
                             <h2 id="favorites-heading" class="text-2xl font-extrabold tracking-tight text-gray-900">Our Favorites</h2>
-                            <a href="#" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">Browse all favorites<span aria-hidden="true"> &rarr;</span></a>
+                            <Link href="/our-products" class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">Browse all favorites<span aria-hidden="true"> &rarr;</span></Link>
                         </div>
 
                         <div class="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-y-0 sm:gap-x-6 lg:gap-x-8">
@@ -160,6 +160,7 @@ import Hero from "@/Shared/Home/Hero.vue";
 import Footer from "@/Shared/Footer/Footer.vue";
 import DefaultLayout from "@/Pages/Client/Shared/DefaultLayout.vue";
 import rosesImage from "../../../assets/Home/roses.jpg"
+import CounterDown from "@/Components/CounterDown.vue";
 
 const favorites = [
     {
@@ -197,6 +198,7 @@ export default {
         }
     },
     components: {
+        CounterDown,
         Dialog,
         DialogOverlay,
         Popover,

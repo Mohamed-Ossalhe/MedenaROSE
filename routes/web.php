@@ -69,6 +69,7 @@ Route::middleware('auth', TrackVisitors::class)->group(function () {
 
     /*** Client Profile ***/
     Route::get('/profile/{id}', [UserController::class, 'show'])->name('profile');
+    Route::patch('/profile/{id}', [UserController::class, 'update']);
 
     /*** Payment Routes ***/
     Route::post('/payment', [PaymentController::class, 'payment'])->name('payment');

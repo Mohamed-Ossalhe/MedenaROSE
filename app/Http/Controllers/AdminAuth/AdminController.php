@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AdminAuth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Http\Middleware\IsAdminMiddleware;
+use Illuminate\Support\Carbon;
 
 class AdminController extends Controller
 {
@@ -20,7 +22,28 @@ class AdminController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('Admin/Dashboard');
+        $pendingOrders = Order::where('status', 'pending')->count();
+        $shippedOrders = Order::where('status', 'shipped')->count();
+        $yesterday = Carbon::yesterday();
+        $orders = [
+            'todaysOrders' => Order::whereDate('created_at', today())
+                ->get()->count(),
+            'totalEarningToday' => Order::whereDate('created_at', today())
+                ->sum('totalPrice'),
+            'yesterdayOrders' => Order::whereDate('created_at', $yesterday)
+                ->get()->count(),
+            'totalEarningYesterday' => Order::whereDate('created_at', $yesterday)
+                ->sum('totalPrice'),
+        ];
+        return Inertia::render('Admin/Dashboard', [
+            'pendingOrders' => [
+                'total' => $pendingOrders
+            ],
+            'shippedOrders' => [
+                'total' => $shippedOrders
+            ],
+            'orders' => $orders
+        ]);
     }
 
     /**
