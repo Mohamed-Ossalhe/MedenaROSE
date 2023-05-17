@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Favorite;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -101,6 +103,14 @@ class HomeController extends Controller
     // show product
     public function showProduct(string $id) {
         $product = Product::find($id);
+        $isFavorite = Favorite::where('user_id', Auth::user()->id)
+            ->where('product_id', $id)
+            ->first();
+        if($isFavorite) {
+            $isFavorite = true;
+        }else {
+            $isFavorite = false;
+        }
         $relatedProducts = Product::with('images')
             //->getQuery()
             ->where('category_id', $product->category_id)
@@ -120,20 +130,8 @@ class HomeController extends Controller
                     ];
                 })
             ],
-            "relatedProducts" => $relatedProducts//$relatedProducts->map(function ($product) {
-//                return [
-//                    "id" => $product->id,
-//                    "name" => $product->name,
-//                    "description" => $product->description,
-//                    "price" => $product->price,
-//                    "images" => $product->images->map(function ($image) {
-//                        return [
-//                            'id' => $image->id,
-//                            'src' => $image->src
-//                        ];
-//                    })
-              //  ];
-            //})
+            "relatedProducts" => $relatedProducts,
+            "isFavorite" => $isFavorite
         ]);
     }
 }

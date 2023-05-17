@@ -130,7 +130,7 @@
                         </div>
 
                         <!-- Profile dropdown -->
-                        <Menu as="div" :class="user ? 'block relative ml-3 z-50': 'hidden relative ml-3 z-50'">
+                        <Menu title="Profile" as="div" :class="user ? 'block relative ml-3 z-50': 'hidden relative ml-3 z-50'">
                             <div>
                                 <MenuButton class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                     <span class="sr-only">Open user menu</span>
@@ -151,7 +151,16 @@
 
                         <!-- Cart -->
                         <div class="ml-4 flow-root lg:ml-6">
-                            <Link href="/cart" class="group -m-2 p-2 flex items-center">
+                            <Link title="Favorites" href="/favorites" class="group -m-2 p-2 flex items-center">
+                                <HeartIcon class="flex-shrink-0 h-6 w-6 text-pink-400 group-hover:text-pink-500" aria-hidden="true" />
+                                <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{{totalOrdersInCart = ""}}</span>
+                                <span class="sr-only">items in cart, view bag</span>
+                            </Link>
+                        </div>
+
+                        <!-- Cart -->
+                        <div class="ml-4 flow-root lg:ml-6">
+                            <Link title="Cart" href="/cart" class="group -m-2 p-2 flex items-center">
                                 <ShoppingBagIcon class="flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
                                 <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">{{totalOrdersInCart}}</span>
                                 <span class="sr-only">items in cart, view bag</span>
@@ -180,7 +189,7 @@ import {
     TransitionChild,
     TransitionRoot,
 } from '@headlessui/vue'
-import { MenuIcon, SearchIcon, ShoppingBagIcon, XIcon } from '@heroicons/vue/outline'
+import { MenuIcon, SearchIcon, ShoppingBagIcon, XIcon, HeartIcon } from '@heroicons/vue/outline'
 import logo from '../../../assets/pink-logo.svg'
 
 const navigation = {
@@ -212,6 +221,7 @@ export default {
         SearchIcon,
         ShoppingBagIcon,
         XIcon,
+        HeartIcon
     },
     props: {
         categories: Array

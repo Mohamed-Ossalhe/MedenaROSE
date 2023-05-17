@@ -82,7 +82,7 @@
                         <div v-if="products.data.length !== 0" class="lg:col-span-3">
                             <div class="bg-white">
                                 <div class="max-w-2xl mx-auto py-4 px-4 sm:py-8 sm:px-6 lg:max-w-7xl lg:px-8">
-                                    <div class="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+                                    <div class="products grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
                                         <div v-for="product in products.data" :key="product.id">
                                             <Product :product="product"/>
                                         </div>
