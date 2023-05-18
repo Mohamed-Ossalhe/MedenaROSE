@@ -198,6 +198,7 @@ export default {
                 }, {
                     preserveScroll: true
                 })
+                this.flashMessage()
             },
             immediate: true
         },

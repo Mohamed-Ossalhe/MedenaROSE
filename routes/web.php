@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminAuth\AdminController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Cart\PaymentController;
 use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Favorites\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Product\ProductController;
@@ -82,4 +83,7 @@ Route::middleware('auth', TrackVisitors::class)->group(function () {
     /*** Cart Routes ***/
     Route::resource('cart', CartController::class)->name('index', 'cart');
     Route::patch('cart', [CartController::class, 'update']);
+
+    /*** Favorites Routes ***/
+    Route::resource('favorites', FavoriteController::class)->name('index', 'favorites');
 });

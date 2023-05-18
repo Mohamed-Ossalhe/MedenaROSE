@@ -110,6 +110,16 @@ class CartController extends Controller
         $cartData = $request->validate([
             'quantity' => 'required'
         ]);
+        if(!$cart->product_id):
+            return 0;
+        endif;
+        $product = Product::find($cart->product_id);
+        //dd($product);
+        if($product->quantity < $cartData["quantity"]):
+            return back()->with([
+                "message" => "Product Quantity is Limited."
+            ]);
+        endif;
         $cart->update(["quantity" => $cartData["quantity"]]);
         return back()->with([
             "message" => "Cart Updated Successfully."

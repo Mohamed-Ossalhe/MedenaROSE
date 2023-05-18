@@ -18,7 +18,7 @@
                     <div class="col-span-full">
                         <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Product Description</label>
                         <div class="mt-2">
-                            <textarea id="description" v-model="formData.description" name="description" rows="3" class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6" />
+                            <textarea id="description" v-model="formData.description" name="description" minlength="200" rows="3" class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6" />
                         </div>
                         <p v-if="formData.errors.description" v-text="formData.errors.description" class="text-red-500 text-sm"></p>
                         <p class="mt-3 text-sm leading-6 text-gray-600">Write a few sentences about the Product.</p>

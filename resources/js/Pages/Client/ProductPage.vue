@@ -57,7 +57,7 @@
                         <div class="mt-10 flex sm:flex-col1">
                             <button @click="addToBag" type="submit" class="max-w-xs flex-1 bg-primary border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-primary/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 sm:w-full">Add to bag</button>
 
-                            <button type="button" class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
+                            <button @click="addToFavorites" type="button" :class="[isFavorite ? 'text-pink-400 hover:bg-pink-100 hover:text-pink-500' : 'text-gray-400']" class="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500">
                                 <HeartIcon class="h-6 w-6 flex-shrink-0" aria-hidden="true" />
                                 <span class="sr-only">Add to favorites</span>
                             </button>
@@ -168,7 +168,8 @@ export default {
     },
     props: {
         product: Object,
-        relatedProducts: Array
+        relatedProducts: Array,
+        isFavorite: Boolean
     },
     computed: {
         imagePath() {
@@ -216,6 +217,12 @@ export default {
                 id: this.product.id,
                 quantity: 1
             }, {
+                preserveState: true,
+                preserveScroll: true
+            })
+        },
+        addToFavorites() {
+            this.$inertia.post('/favorites', {product_id: this.product.id}, {
                 preserveState: true,
                 preserveScroll: true
             })
